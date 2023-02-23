@@ -1,5 +1,5 @@
 <p align="center">
-# Better MDL 🤍
+<h1>Better MDL 🤍<h2>
 Enhance your MyDramaList experience~
 </p>
 <center><img src="https://dear-clouds.carrd.co/assets/images/image02.jpg?v=85603791"></center>
