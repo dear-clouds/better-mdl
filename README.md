@@ -1,5 +1,7 @@
+<p align="center">
 # Better MDL 🤍
-
+Enhance your MyDramaList experience~
+</p>
 <center><img src="https://dear-clouds.carrd.co/assets/images/image02.jpg?v=85603791"></center>
 
 Better MDL is a project i'm working on to enhance the website. I've been using MDL since the very beginning and it hasn't improved that much over the years. So here I am, trying to make the website more friendly and modern!
