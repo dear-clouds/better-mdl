@@ -46,6 +46,14 @@
         $(`input[name=icon_${key}]`).val(icons[key]);
     }
 
+    // Set the default values to true
+    if (localStorage.getItem('betterMDLRatings') === null) {
+        localStorage.setItem('betterMDLRatings', 'true');
+    }
+    if (localStorage.getItem('betterMDLTMDBSearch') === null) {
+        localStorage.setItem('betterMDLTMDBSearch', 'true');
+    }
+
     const statusNames = {
         1: 'Watching',
         2: 'Completed',
