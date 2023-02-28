@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better MyDramaList
 // @author       Mio.
-// @version      1.0
+// @version      1.0.1
 // @homepage     https://dear-clouds.carrd.co/#better-mdl
 // @updateURL    https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js
 // @match        *://www.mydramalist.com/*
@@ -199,6 +199,14 @@
 
     .form-check-inline + .form-check-inline {
         margin-left: 0px;
+    }
+
+    #better-mdl {
+        width: 1270px;
+        margin: 0 auto;
+        background: var(--mdl-box-background);
+        border-radius: 5px;
+        margin-bottom: 20px;
     }
     `;
 
@@ -799,7 +807,7 @@
         betterMDLDiv = $('<div id="better-mdl" style="padding: 20px;"></div>');
 
         // Add the div before the box-footer b-t div
-        $('div.el-loading-mask').before(betterMDLDiv);
+        $('div#footer').before(betterMDLDiv);
 
         betterMDLDiv.append($('<h2></h2>').text('Better MDL Settings'));
 
