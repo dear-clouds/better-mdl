@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better MyDramaList
 // @author       Mio.
-// @version      1.0.1
+// @version      1.0.2
 // @homepage     https://dear-clouds.carrd.co/#better-mdl
 // @updateURL    https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js
 // @match        *://www.mydramalist.com/*
@@ -973,6 +973,7 @@
     const year = $('.film-title').text().split('(')[1].slice(0, -1);
     // Check if the tag "Adapted From A Manga" is present
     const adaptedFromMangaTag = document.querySelector('a[href*="th=127"]');
+    const adaptedFromWebtoonTag = document.querySelector('a[href*="th=122"]');
 
     // Get the Romaji title
     const filmTitleLink = document.querySelector('h1.film-title a');
@@ -1344,18 +1345,15 @@
         websiteIconsContainer.appendChild(icon);
     }
 
-    if (adaptedFromMangaTag) {
-        // Create a new div to hold the AniList search result
+    if (adaptedFromMangaTag || adaptedFromWebtoonTag) {
         const anilistResultDiv = document.createElement('div');
         anilistResultDiv.classList.add('box', 'clear', 'hidden-sm-down', 'mio-manga-box');
 
-        // Create a header for the box
         const header = document.createElement('div');
         header.classList.add('box-header', 'primary');
         header.innerHTML = '<h3>Check out the original work</h3>';
         anilistResultDiv.appendChild(header);
 
-        // Create a body for the box
         const body = document.createElement('div');
         body.classList.add('box-body', 'light-b');
         anilistResultDiv.appendChild(body);
@@ -1398,8 +1396,9 @@
         }
       `;
         const variables = {
-            search: nativeTitleValue || filmTitleValue,
+            search: nativeTitleValue,
         };
+        console.log('variables:', variables);
         const apiUrl = 'https://graphql.anilist.co';
         const requestOptions = {
             method: 'POST',
@@ -1412,56 +1411,69 @@
                 variables,
             }),
         };
+        console.log('AniList API request:', apiUrl, requestOptions);
         fetch(apiUrl, requestOptions)
             .then(response => response.json())
             .then(data => {
                 const media = data.data.Media;
+                if (!media && filmTitleValue) {
+                  // If no results found with nativeTitleValue, search again with filmTitleValue
+                  variables.search = filmTitleValue;
+                  const requestOptions2 = {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      Accept: 'application/json',
+                    },
+                    body: JSON.stringify({
+                      query,
+                      variables,
+                    }),
+                  };
+                  return fetch(apiUrl, requestOptions2).then(response => response.json());
+                }
+                return data;
+              })
+            .then(data => {
+                console.log('AniList API response:', data);
+                const media = data.data.Media;
+
                 // Remove the loading message
                 loadingMessage.remove();
 
                 if (media) {
-                    // Create the AniList card div
                     const cardDiv = document.createElement('div');
                     cardDiv.classList.add('card', 'my-3');
 
-                    // Create the row div for the card content
                     const contentRow = document.createElement('div');
                     contentRow.classList.add('row', 'no-gutters');
 
-                    // Create the column div for the poster image
                     const posterCol = document.createElement('div');
                     posterCol.classList.add('col-md-4');
 
-                    // Create the card image
                     const cardImg = document.createElement('img');
                     cardImg.classList.add('card-img');
                     cardImg.style.width = '100%';
                     cardImg.src = media.coverImage.large;
 
-                    // Add the image to the poster column div
                     posterCol.appendChild(cardImg);
 
-                    // Create the column div for the card content
                     const contentCol = document.createElement('div');
                     contentCol.classList.add('col-md-8');
 
-                    // Create the card body div for the content
                     const cardBody = document.createElement('div');
                     cardBody.classList.add('card-body');
                     cardBody.style = "padding: 8px 2px 5px 0px";
 
-                    // Create the card title
                     const cardTitle = document.createElement('h6');
                     cardTitle.classList.add('card-title');
                     cardTitle.innerText = media.title.romaji;
 
-                    // Create the card Year
                     const cardYear = document.createElement('div');
                     cardYear.classList.add('label', 'label-secondary');
                     cardYear.innerText = `${media.startDate.year}`;
                     cardYear.style = "margin-right: 8px;";
 
-                    // Create the card rating
                     const cardRating = document.createElement('div');
                     cardRating.classList.add('card-rating', 'label', 'label-primary');
                     cardRating.style = "margin-right: 8px;";
@@ -1475,25 +1487,21 @@
                     cardRatingText.innerText = media.averageScore / 10;
                     cardRating.appendChild(cardRatingText);
 
-                    // Create the card Volumes
                     const cardVolumes = document.createElement('div');
                     cardVolumes.classList.add('label', 'label-secondary');
                     cardVolumes.style = "font-weight: lighter; color: var(--mdl-text) !important;";
                     cardVolumes.innerText = `${media.volumes} volumes - ${media.chapters} chapters`;
 
-                    // Create the card description
                     const cardDesc = document.createElement('p');
                     cardDesc.classList.add('card-text', 'small');
                     cardDesc.innerText = media.description.substring(0, 200) + '...';
 
-                    // Add the title, rating label, and description to the card body div
                     cardBody.appendChild(cardTitle);
                     cardBody.appendChild(cardYear);
                     cardBody.appendChild(cardRating);
                     cardBody.appendChild(cardVolumes);
                     cardBody.appendChild(cardDesc);
 
-                    // Add the poster column and card body to the content column div
                     contentCol.appendChild(cardBody);
                     contentRow.appendChild(posterCol);
                     contentRow.appendChild(contentCol);
@@ -1506,7 +1514,6 @@
                     anilistLink.rel = 'noopener noreferrer';
                     anilistLink.appendChild(cardDiv);
 
-                    // Add the link to the box body div
                     body.appendChild(anilistLink);
                 } else {
                     // Create an error message
