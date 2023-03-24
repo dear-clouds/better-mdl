@@ -46,7 +46,7 @@ The themes I use in my screenshots are available on my [carrd](https://dear-clou
 
 ## Screenshots
 <p align="center">
-<img src="https://dear-clouds.carrd.co/assets/images/gallery22/462efcaf_original.jpg" width="48%">
+<img src="https://dear-clouds.carrd.co/assets/images/gallery22/ebcc1fb5_original.jpg?v=21bef0a8" width="48%">
 <img src="https://dear-clouds.carrd.co/assets/images/gallery22/1863a508_original.jpg" width="48%">
 </p>
 
