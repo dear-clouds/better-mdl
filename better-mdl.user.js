@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better MyDramaList
 // @author       Mio.
-// @version      1.0.2
+// @version      1.0.3
 // @homepage     https://dear-clouds.carrd.co/#better-mdl
 // @updateURL    https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js
 // @match        *://www.mydramalist.com/*
@@ -971,9 +971,6 @@
     const nativeTitleLink = document.querySelector('b.inline + a');
     const nativeTitleValue = nativeTitleLink.textContent.trim();
     const year = $('.film-title').text().split('(')[1].slice(0, -1);
-    // Check if the tag "Adapted From A Manga" is present
-    const adaptedFromMangaTag = document.querySelector('a[href*="th=127"]');
-    const adaptedFromWebtoonTag = document.querySelector('a[href*="th=122"]');
 
     // Get the Romaji title
     const filmTitleLink = document.querySelector('h1.film-title a');
@@ -1345,7 +1342,14 @@
         websiteIconsContainer.appendChild(icon);
     }
 
-    if (adaptedFromMangaTag || adaptedFromWebtoonTag) {
+    const adaptedFromMangaTag = document.querySelector('a[href*="th=127&"]');
+    const adaptedFromWebtoonTag = document.querySelector('a[href*="th=122&"]');
+    const adaptedFromManhwaTag = document.querySelector('a[href*="th=752&"]');
+    const adaptedFromManhuaTag = document.querySelector('a[href*="th=935&"]');
+    const adaptedFromAnimeTag = document.querySelector('a[href*="th=2853&"]');
+    const adaptedFromVideoGameTag = document.querySelector('a[href*="th=88&"]');
+
+    if (adaptedFromMangaTag || adaptedFromWebtoonTag || adaptedFromManhuaTag || adaptedFromManhwaTag || adaptedFromAnimeTag) {
         const anilistResultDiv = document.createElement('div');
         anilistResultDiv.classList.add('box', 'clear', 'hidden-sm-down', 'mio-manga-box');
 
@@ -1417,23 +1421,23 @@
             .then(data => {
                 const media = data.data.Media;
                 if (!media && filmTitleValue) {
-                  // If no results found with nativeTitleValue, search again with filmTitleValue
-                  variables.search = filmTitleValue;
-                  const requestOptions2 = {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      Accept: 'application/json',
-                    },
-                    body: JSON.stringify({
-                      query,
-                      variables,
-                    }),
-                  };
-                  return fetch(apiUrl, requestOptions2).then(response => response.json());
+                    // If no results found with nativeTitleValue, search again with filmTitleValue
+                    variables.search = filmTitleValue;
+                    const requestOptions2 = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            Accept: 'application/json',
+                        },
+                        body: JSON.stringify({
+                            query,
+                            variables,
+                        }),
+                    };
+                    return fetch(apiUrl, requestOptions2).then(response => response.json());
                 }
                 return data;
-              })
+            })
             .then(data => {
                 console.log('AniList API response:', data);
                 const media = data.data.Media;

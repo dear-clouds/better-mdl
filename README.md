@@ -33,7 +33,7 @@ The themes I use in my screenshots are available on my [carrd](https://dear-clou
 
 * Links to IMDB/Trakt etc.
 * Ratings from IMDB/Rotten Tomatoes etc.
-* Link to Anilist for manga adaptations
+* Link to Anilist for Adaptations
 
 ### People pages
 
