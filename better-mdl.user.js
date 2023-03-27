@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Better MyDramaList
 // @author       Mio.
-// @version      1.0.3
+// @version      1.0.4
 // @homepage     https://dear-clouds.carrd.co/#better-mdl
 // @updateURL    https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js
 // @match        *://www.mydramalist.com/*
@@ -1349,7 +1349,7 @@
     const adaptedFromAnimeTag = document.querySelector('a[href*="th=2853&"]');
     const adaptedFromVideoGameTag = document.querySelector('a[href*="th=88&"]');
 
-    if (adaptedFromMangaTag || adaptedFromWebtoonTag || adaptedFromManhuaTag || adaptedFromManhwaTag || adaptedFromAnimeTag) {
+    if (adaptedFromMangaTag || adaptedFromWebtoonTag || adaptedFromManhuaTag || adaptedFromManhwaTag) {
         const anilistResultDiv = document.createElement('div');
         anilistResultDiv.classList.add('box', 'clear', 'hidden-sm-down', 'mio-manga-box');
 
@@ -1374,7 +1374,7 @@
         // Make the AniList search request
         const query = `
         query ($search: String) {
-          Media(search: $search, type: MANGA) {
+            Media(search: $search, type: MANGA, isAdult: false) {
             title {
               romaji
             }
