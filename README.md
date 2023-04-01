@@ -6,9 +6,9 @@ Better MDL 🤍</h1>
 
 Better MDL is a project i'm working on to enhance the website. I've been using MDL since the very beginning and it hasn't improved that much over the years. So here I am, trying to make the website more friendly and modern!
 
-If you have suggestions, feel free to post them on [this post](https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks), just keep in mind that I can't access the API as they don't give keys anymore.
+If you have suggestions, feel free to post them on [this post](https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks), just keep in mind that I can't access the API as they don't give keys anymore. Which means there's a limitation to what I can do on MDL.
 
-The themes I use in my screenshots are available on my [carrd](https://dear-clouds.carrd.co/#mdl-themes) or check my Github profile.
+*The themes I use in my screenshots are available on my [carrd](https://dear-clouds.carrd.co/#mdl-themes) or check my Github profile.*
 
 
 ## Usage
@@ -16,7 +16,7 @@ The themes I use in my screenshots are available on my [carrd](https://dear-clou
 
 2. Install my userscript by clicking [here](https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js) and click "Install".
 
-3. Go to <a href="https://mydramalist.com/account/profile" target="_blank">MyDramaList settings page</a> to customize the script, just like you would to edit your profile (*You need to scroll down to the end of the page `Better MDL Settings` section*)
+3. Go to <a href="https://mydramalist.com/account/profile" target="_blank">MyDramaList settings page</a> to customize the script, just like you would to edit your profile (*You need to scroll down to the end of the page to see the `Better MDL Settings` section*)
 
 4. For other websites not in the settings, the first time you go on a title page, you will get asked if you want to allow a website on a screen <a href="https://imgur.com/E1eWJJW" target="_blank">like this</a>. Simply allow or forbid the websites you want.
 
@@ -69,3 +69,4 @@ The themes I use in my screenshots are available on my [carrd](https://dear-clou
 | Add the average friends score on a drama's page | ✔️ | N/A |
 | Add emoji in comments | To check | N/A |
 
+*This list might no be up-to-date so please check the official <a href="https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks?r=notif&_nid=134641861&page=1" target="__blank">MDL Thread</a>.*
