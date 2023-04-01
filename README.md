@@ -8,7 +8,7 @@ Better MDL is a project i'm working on to enhance the website. I've been using M
 
 If you have suggestions, feel free to post them on [this post](https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks), just keep in mind that I can't access the API as they don't give keys anymore.
 
-The themes I use in my screenshots are available on my [carrd](https://dear-clouds.carrd.co/#mdl-themes).
+The themes I use in my screenshots are available on my [carrd](https://dear-clouds.carrd.co/#mdl-themes) or check my Github profile.
 
 
 ## Usage
@@ -24,20 +24,23 @@ The themes I use in my screenshots are available on my [carrd](https://dear-clou
 
 6. Try it out and let me know what you think!
 
+### Known Bugs
 
-## Features
+* Some titles won't have the right result for external search. Currently there's nothing I can do as MDL don't refer to those external ids anywhere and scraping can only be that accurate.
 
-### Everywhere
+## Features Available
+
+#### Everywhere
 
 * Back to Top button
 
-### Title pages
+#### Title pages
 
 * Links to IMDB/Trakt etc.
 * Ratings from IMDB/Rotten Tomatoes etc.
 * Link to Anilist for Adaptations
 
-### People pages
+#### People pages
 
 * 3 Layout Views (Original, Thumbnails & Posters)
 * Status icons
@@ -46,19 +49,23 @@ The themes I use in my screenshots are available on my [carrd](https://dear-clou
 * Hide completed titles
 * Collapse the sections
 
-## Screenshots
+### Screenshots
 <p align="center">
 <img src="https://dear-clouds.carrd.co/assets/images/gallery22/ebcc1fb5_original.jpg?v=21bef0a8" width="48%">
 <img src="https://dear-clouds.carrd.co/assets/images/gallery22/1863a508_original.jpg" width="48%">
+<img src="https://dear-clouds.carrd.co/assets/images/gallery22/0d9c43c7_original.jpg?v=e8880db8" width="48%">
+<img src="https://dear-clouds.carrd.co/assets/images/gallery22/52fe79e5_original.jpg?v=9281e8b0" width="48%">
 </p>
 
 
 ## To-do & Suggestions
-| Task      | Doable? |
-| :--- | :----: |
-| Click on a status total to only show those titles | ✔️ |
-| Add the top 3 genres on Poster View | ✔️ |
-| Hide cancelled titles | ✔️ |
-| Show ratings from friends on a drama's page | To check |
-| Add emoji in comments | To check |
-| Do all of this for personal dramalist as well | Should be |
+| Task      | Doable? | ETA |
+| :--- | :----: | :----: |
+| Show ratings from friends on a drama's page | ✔️ | In progress |
+| Do all of this for personal dramalist as well | ✔️ | In progress |
+| Click on a status total to only show those titles | ✔️ | N/A |
+| Add the top 3 genres on Poster View | ✔️ | N/A |
+| Hide cancelled titles | ✔️ | N/A |
+| Add the average friends score on a drama's page | ✔️ | N/A |
+| Add emoji in comments | To check | N/A |
+
