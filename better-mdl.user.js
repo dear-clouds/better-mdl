@@ -330,7 +330,6 @@
         /* ---------------------------- Sort & View icons --------------------------- */
 
         $('table.film-list').each(function () {
-            //todo  Need to fix this because after switching each view twice, the table completely disappears 
             const $originalTable = $(this);
             const $table = $originalTable.clone(true);
             $originalTable.replaceWith($table);

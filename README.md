@@ -12,15 +12,17 @@ The themes I use in my screenshots are available on my [carrd](https://dear-clou
 
 
 ## Usage
-1. Install [Tampermonkey](https://www.tampermonkey.net/) for your browser (or you preferred Userscripts Manager)
+1. Install <a href="https://www.tampermonkey.net/" target="_blank">Tampermonkey</a> for your browser (or you preferred Userscripts Manager)
 
 2. Install my userscript by clicking [here](https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js) and click "Install".
 
-3. Go to [MyDramaList settings page](https://mydramalist.com/account/profile) to customize the script, just like you would to edit your profile (*You will probably need to refresh the page once to see the `Better MDL Settings` section*)
+3. Go to <a href="https://mydramalist.com/account/profile" target="_blank">MyDramaList settings page</a> to customize the script, just like you would to edit your profile (*You need to scroll down to the end of the page `Better MDL Settings` section*)
 
-4. For other websites not in the settings, the first time you go on a title page, you will get asked if you want to allow a website on a screen [like this](https://imgur.com/E1eWJJW). Simply allow or forbid the websites you want.
+4. For other websites not in the settings, the first time you go on a title page, you will get asked if you want to allow a website on a screen <a href="https://imgur.com/E1eWJJW" target="_blank">like this</a>. Simply allow or forbid the websites you want.
 
-5. Try it out and let me know what you think!
+5. The first time you're using the Thumbnail View on a page, it might take a little while to load all the posters, especially if there's a lot of titles or if you have slow internet, just be patient.
+
+6. Try it out and let me know what you think!
 
 
 ## Features
