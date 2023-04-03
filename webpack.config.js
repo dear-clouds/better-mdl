@@ -1,9 +1,10 @@
 const WebpackUserscript = require("webpack-userscript").default;
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const packageJson = require("./package.json");
 const path = require('path');
 
 module.exports = {
-    mode: "development",
+    mode: "production",
     entry: {
         "better-mdl": "./src/index.js",
     },
@@ -33,11 +34,12 @@ module.exports = {
                 downloadURL: "https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js",
                 updateURL: "https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.meta.js",
                 supportURL: "https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks",
-                licence: "GPL-3.0-or-later",
-                grant: "GM_addStyle GM.xmlHttpRequest GM_getValue"
+                grant: ["GM_addStyle", "GM.xmlHttpRequest", "GM_getValue"],
             },
         }),
+        // new BundleAnalyzerPlugin(),
     ],
+    devtool: false,
     devServer: {
         static: {
             directory: path.join(__dirname, 'dist'),
@@ -50,4 +52,3 @@ module.exports = {
         },
     },
 };
-
