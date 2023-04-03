@@ -11,34 +11,47 @@ If you have suggestions, feel free to post them on [this post](https://mydramali
 *The themes I use in my screenshots are available on my [carrd](https://dear-clouds.carrd.co/#mdl-themes) or check my Github profile.*
 
 
-## Usage
+## Installation
 1. Install <a href="https://www.tampermonkey.net/" target="_blank">Tampermonkey</a> for your browser (or you preferred Userscripts Manager)
 
 2. Install my userscript by clicking [here](https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js) and click "Install".
 
 3. Go to <a href="https://mydramalist.com/account/profile" target="_blank">MyDramaList settings page</a> to customize the script, just like you would to edit your profile (*You need to scroll down to the end of the page to see the `Better MDL Settings` section*)
 
-4. For other websites not in the settings, the first time you go on a title page, you will get asked if you want to allow a website on a screen <a href="https://imgur.com/E1eWJJW" target="_blank">like this</a>. Simply allow or forbid the websites you want.
+4. Try it out and let me know what you think!
 
-5. The first time you're using the Thumbnail View on a page, it might take a little while to load all the posters, especially if there's a lot of titles or if you have slow internet, just be patient.
+### How to use / customize (MAKE SURE TO READ)
 
-6. Try it out and let me know what you think!
+* For other website icons not in the settings, the first time you go on a title page, you will get asked if you want to allow a website on a screen <a href="https://imgur.com/E1eWJJW" target="_blank">like this</a>. Simply allow or forbid the websites you want.
+
+* The first time you're using the Thumbnail View on a page, it might take a little while to load all the posters, especially if there's a lot of titles or if you have slow internet, just be patient.
+
+* It might take a little while to show all your Friend ratings, especially if you have many friends or if you have slow internet, just be patient. Also to favorite/unfavorite a friend, just click the heart. It will reflect the change on refresh.
+
+* For the pie chart "Titles by Country", the colors are the ones you defined in your settings for the status Currently Watching, Planned etc. (might change later)
 
 ### Known Bugs
 
-* Some titles won't have the right result for external search. Currently there's nothing I can do as MDL don't refer to those external ids anywhere and scraping can only be that accurate.
+* [**WON'T FIX**] Some titles don't have the right result for external searches. Currently there's nothing I can do as MDL don't refer to those external ids anywhere and scraping can only be that accurate. *But what you can do is reporting it to me and providing me the right urls for each website*. I plan to make a mapping file at some point if you have many titles with this issue.
 
 ## Features Available
 
 #### Everywhere
 
 * Back to Top button
+* Hide comments with defined terms
+
+#### Profile
+
+* Titles by Country
 
 #### Title pages
 
 * Links to IMDB/Trakt etc.
-* Ratings from IMDB/Rotten Tomatoes etc.
+* Ratings from IMDB/Rotten Tomatoes/Metacritic
 * Link to Anilist for Adaptations
+* Add a heart to your liked people
+* Friend ratings & ability to put your favs at the top (*suggested by sailingmars*)
 
 #### People pages
 
@@ -70,3 +83,8 @@ If you have suggestions, feel free to post them on [this post](https://mydramali
 | Add emoji in comments | To check | N/A |
 
 *This list might no be up-to-date so please check the official <a href="https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks?r=notif&_nid=134641861&page=1" target="__blank">MDL Thread</a>.*
+
+## Credits
+
+* My script was originally inspired by <a href="https://greasyfork.org/en/scripts/414922-mydramalist-com-item-highlighter" target="_blank">Item Highlighter</a> by **luckz**
+* Switched to <a href="https://github.com/momocow/webpack-userscript/" target="_blank">Webpack Userscript</a> starting v1.1.0 as my script was becoming too long
