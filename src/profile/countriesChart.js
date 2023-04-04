@@ -54,15 +54,7 @@ d3Script.onload = function () {
                 .append('g')
                 .attr('transform', 'translate(150,150)');
 
-            function getRandomPastelColor() {
-                const r = Math.floor(Math.random() * 64) + 192;  // 192-255
-                const g = Math.floor(Math.random() * 64) + 192;  // 192-255
-                const b = Math.floor(Math.random() * 64) + 192;  // 192-255
-                return `rgb(${r}, ${g}, ${b})`;
-            }
-
-            const pastelColor = getRandomPastelColor();
-            colours[7] = pastelColor;
+            colours[7] = 'var(--mdl-primary)';
             const colorScale = d3.scaleOrdinal()
                 .range(Object.values(colours));
 
