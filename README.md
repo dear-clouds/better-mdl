@@ -58,32 +58,34 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 ## Features Available
 
 #### Everywhere
-
 - Back to Top button
 - Hide comments with defined terms
 - Option to hide the default MDL stats on profile
 
 #### Profile
-
 - Titles by Country
 - Option to hide share icons on drama & people
+- Bookmark lists & see saved lists on profile
+- Pin favorite titles on profile via a list (suggested by KC Drama LOVER)
 
 #### Title pages
-
 - Links to IMDB/Trakt etc.
 - Ratings from IMDB/Rotten Tomatoes/Metacritic
 - Link to Anilist for Adaptations
 - Add a heart to your liked people
 - Friend ratings & ability to put your favs at the top (_suggested by sailingmars_)
+- Average friends score (suggested by Saarthak)
 
 #### People pages
-
 - 3 Layout Views (Original, Thumbnails & Posters)
 - Status icons
 - Show the total for each status on your list
 - Sorting & Ordering options
 - Hide completed titles
 - Collapse the sections
+
+#### Dramalist
+- Export dramalists in .csv (suggested by spepp)
 
 ### Screenshots
 
@@ -102,8 +104,7 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 | Click on a status total to only show those titles |    ✔️    |     N/A     |
 | Add the top 3 genres on Poster View               |    ✔️    |     N/A     |
 | Hide cancelled titles                             |    ✔️    |     N/A     |
-| Add the average friends score on a drama's page   |    ✔️    |     N/A     |
-| Add emoji in comments                             | To check |     N/A     |
+| Save new comments and export old ones                             | ✔️ |     N/A     |
 
 _This list might no be up-to-date so please check the official <a href="https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks?r=notif&_nid=134641861&page=1" target="__blank">MDL Thread</a>._
 
