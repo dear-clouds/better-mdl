@@ -1,4 +1,4 @@
-import { token } from "../index.js";
+import { token, logPrefix, logStyle, errorStyle } from "../index.js";
 
 function getActorIdFromUrl(url) {
     const regex = /\/people\/(\d+)-/;
@@ -11,14 +11,15 @@ async function getActorLikeStatus(actorId) {
         const url = `https://mydramalist.com/v1/users/data?token=${token}&lang=en-US&people=${actorId}`;
 
         $.getJSON(url, function(result) {
-            console.log(`Actor ID: ${actorId}, Result:`, result);
-            if (result.people && result.people.length > 0 && result.people[0].liked !== undefined) {
+            console.log(logPrefix, logStyle, `Actor ID: ${actorId}, Result:`, result);
+            if (result.people && Array.isArray(result.people) && result.people.length > 0 && result.people[0].liked !== undefined) {
                 resolve(result.people[0].liked);
             } else {
+                console.error(logPrefix, errorStyle, `Invalid response format for actor ID: ${actorId}`);
                 reject('Invalid response format');
             }
         }).fail(function(jqxhr, textStatus, error) {
-            console.error(`Error getting actor like status for ID: ${actorId} - ${textStatus} - ${error}`);
+            console.error(logPrefix, errorStyle, `Error getting actor like status for ID: ${actorId} - ${textStatus} - ${error}`);
             reject(error);
         });
     });
@@ -36,7 +37,7 @@ async function addHeartToLikedActors(actorId, actorElement) {
         } else if (nameElement) {
             nameElement.insertAdjacentHTML('afterend', heartIcon);
         } else {
-            console.error(`Actor name element not found for ID: ${actorId}`);
+            console.error(logPrefix, errorStyle, `Actor name element not found for ID: ${actorId}`);
         }
     }
 }
@@ -49,7 +50,7 @@ actorElements.forEach(async actorElement => {
     const actorId = getActorIdFromUrl(actorUrl);
 
     if (actorId) {
-        console.log(`Processing Actor ID: ${actorId}`);
+        console.log(logPrefix, logStyle, `Processing Actor ID: ${actorId}`);
         await addHeartToLikedActors(actorId, actorElement);
     }
 });

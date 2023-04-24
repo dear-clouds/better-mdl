@@ -1,5 +1,4 @@
-import { token } from "../index.js";
-import { getAllFriends } from "../index.js";
+import { token, getAllFriends, logPrefix, logStyle } from "../index.js";
 
 /* ------------------------- Friend status on title ------------------------- */
 
@@ -20,11 +19,11 @@ function updateFavoriteStatus(friends) {
 
 async function checkUserList(titleId) {
     const friendsData = await getAllFriends(token);
-    console.log('Friends data:', friendsData);
+    // console.log('Friends data:', friendsData);
 
     // Update favorite status for all friends
     const friendsWithFavorites = updateFavoriteStatus(friendsData);
-    console.log('Friends with favorites:', friendsWithFavorites);
+    console.log(logPrefix, logStyle, 'All Friends:', friendsWithFavorites);
 
     const tableIds = {
         Watching: 'list_1',
@@ -44,6 +43,24 @@ async function checkUserList(titleId) {
     </div>
     </div>
     `;
+
+    let scores = [];
+
+    // Check if the "Friends' Average Score" element already exists
+    const $friendsAverageScore = $('.bettermdl-friends .average-score');
+    if ($friendsAverageScore.length === 0) {
+        // Create the "Friends' Average Score" element if it doesn't exist
+        const friendsAverageScoreHtml = `
+        <div class="list-item p-a-0"><b class="inline">Friends' Average Score:</b> <span class="average-score">N/A</span></div>
+        `;
+        $('.bettermdl-friends .box-body').eq(1).prepend(friendsAverageScoreHtml);
+    }
+
+    // Update the "Friends' Average Score" as we get friend data
+    const $averageScore = $('.bettermdl-friends .average-score');
+    let totalScore = 0;
+    let count = 0;
+
     $('.title-contributors.box').before(friendListHtml);
 
     $('.bettermdl-friends .contributor-list').on('click', '.favorite', function () {
@@ -65,7 +82,7 @@ async function checkUserList(titleId) {
 
     for (let friend of friendsWithFavorites) {
         const userListUrl = `https://mydramalist.com/dramalist/${friend.username}`;
-        console.log('Checking user list at:', userListUrl);
+        console.log(logPrefix, logStyle, 'Checking friend list:', userListUrl);
 
         $.get(userListUrl, function (data) {
             const parser = new DOMParser();
@@ -88,6 +105,11 @@ async function checkUserList(titleId) {
                     const scoreElement = row && row.querySelector('.score');
                     score = scoreElement ? scoreElement.textContent : 'N/A';
 
+                    // Only add valid scores to the array
+                    if (score !== 'N/A' && score !== '0.0') {
+                        scores.push(parseFloat(score));
+                    }
+
                     isTitleOnList = true;
                 }
             }
@@ -96,7 +118,6 @@ async function checkUserList(titleId) {
             if (isTitleOnList) {
                 $('.loading').remove();
                 friendData.push({ profileUrl, profileName, avatar, status, score });
-                // Add this friend data to page
                 let friendHtml = '';
                 friendHtml += `
                 <div class="contributor" data-username="${friend.username}">
@@ -128,24 +149,56 @@ async function checkUserList(titleId) {
 
             // Check if this is the last friend in the loop and update the page
             if (friendData.length === friendsData.length) {
-                console.log('Friend data with title info:', friendData);
+                console.log(logPrefix, logStyle, 'Friend data with title info:', friendData);
                 if (friendData.length === 0) {
                     $('.bettermdl-friends .loading').text('No friends have this title on their list. Time to makes new ones!');
                 } else {
                     $('.bettermdl-friends .loading').remove();
                 }
             }
+
+            const scoresAverage = calculateAverageScore(scores);
+            updateFriendsScoreHtml(scoresAverage);
         });
     }
 }
 
-// Main function to run on page load
+function calculateAverageScore(scores) {
+    const validScores = scores.filter(score => score !== 0.0 && score !== 'N/A');
+    if (validScores.length > 0) {
+        const totalScore = validScores.reduce((total, score) => total + score, 0);
+        return (totalScore / validScores.length).toFixed(1);
+    } else {
+        return 'N/A';
+    }
+}
+
+function updateFriendsScoreHtml(averageScore) {
+    const $statsBox = $('.box.clear.hidden-sm-down').eq(1);
+    const $listElement = $statsBox.find('.list');
+    const $scoreElement = $listElement.find('.list-item:nth-child(1)');
+    const $scoreText = $scoreElement.find('.inline');
+
+    // Add the "Friends' Average Score" text if it doesn't exist
+    const friendsScoreHtml = `
+        <li class="list-item p-a-0">
+            <b class="inline">Friends' Average Score:</b> 
+            <span class="average-score">${averageScore}</span>
+        </li>
+    `;
+    if (!$statsBox.find('.average-score').length) {
+        $scoreElement.after(friendsScoreHtml);
+    } else {
+        $statsBox.find('.average-score').text(averageScore);
+    }
+}
+
 function main() {
     // Get title ID from URL
     const titleId = window.location.pathname.split('-')[0].split('/').pop();
-    console.log('Title ID:', titleId);
+    // console.log('Title ID:', titleId);
     if (!titleId) {
-        console.log('Error: No title ID found in URL');
+        console.log(logPrefix, logStyle, 'Error: No title ID found in URL');
         return;
     }
     checkUserList(titleId);

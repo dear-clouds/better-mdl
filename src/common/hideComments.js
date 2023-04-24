@@ -1,3 +1,5 @@
+import { logPrefix, logStyle } from "../index.js";
+
 const currentUrl = window.location.href;
 
 /* -------------------------------------------------------------------------- */
@@ -18,7 +20,7 @@ function hideComments() {
         for (const word of wordsArray) {
             if (commentText.includes(word.trim().toLowerCase())) {
                 $(this).hide();
-                console.log(
+                console.log(logPrefix, logStyle, 
                     `Comment hidden by "${word.trim().toLowerCase()}":`,
                     commentText
                 );
@@ -34,7 +36,7 @@ if (
     currentUrl.match(/https:\/\/mydramalist\.com\/list\/\w+/)
 ) {
     const hideWords = localStorage.getItem("betterMDLHideWords").trim();
-    console.log("List of hidden words:", hideWords ? hideWords.split(",") : []);
+    console.log(logPrefix, logStyle, "List of hidden words:", hideWords ? hideWords.split(",") : []);
     // Hide comments on initial page load
     hideComments();
 

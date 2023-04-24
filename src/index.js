@@ -1,6 +1,16 @@
 import 'style-loader';
 import 'css-loader';
 
+console.log(`%c
+██████  ███████ ████████ ████████ ███████ ██████      ███    ███ ██████  ██      
+██   ██ ██         ██       ██    ██      ██   ██     ████  ████ ██   ██ ██      
+██████  █████      ██       ██    █████   ██████      ██ ████ ██ ██   ██ ██      
+██   ██ ██         ██       ██    ██      ██   ██     ██  ██  ██ ██   ██ ██      
+██████  ███████    ██       ██    ███████ ██   ██     ██      ██ ██████  ███████ 
+                                                                                                                                           
+`, 'color: #846D62; text-shadow: 0px 4px 1px #A8A29C;');
+
+
 /* -------------------------------------------------------------------------- */
 /*                               Cookie session                               */
 /* -------------------------------------------------------------------------- */
@@ -22,7 +32,11 @@ if (token) {
     });
 }
 
-console.log(token);
+// console.log(token);
+
+const logPrefix = '%c Better MDL ';
+const logStyle = 'background-color: #846D62; color: white; font-weight: bold;';
+const errorStyle = 'background-color: #A8A29C; color: black; font-weight: bold;';
 
 function importAll(r) {
     r.keys().forEach(key => r(key));
@@ -45,7 +59,7 @@ export async function getAllFriends(token) {
                     'authorization': `Bearer ${token}`,
                 },
                 success: function (json) {
-                    console.log(`Response for page ${page}:`, json); // Log the response
+                    console.log(logPrefix, logStyle, `Response for page ${page}:`, json);
                     if (json.error) {
                         console.error(`Error on page ${page}: ${json.error}`);
                         resolve(null);
@@ -66,7 +80,7 @@ export async function getAllFriends(token) {
     let hasMore = true;
 
     while (hasMore) {
-        console.log('Processing page:', currentPage); // Log the current page
+        console.log(logPrefix, logStyle, 'Processing page:', currentPage); // Log the current page
         const promises = [];
 
         // Fetch up to 5 pages at a time
@@ -81,14 +95,14 @@ export async function getAllFriends(token) {
         const friends = pages.flat().filter(friend => friend !== null);
 
         if (friends.length > 0) {
-            console.log('Friends on pages', currentPage - promises.length, 'to', currentPage - 1, ':', friends); // Log friends on the current pages
+            console.log(logPrefix, logStyle, 'Friends on pages', currentPage - promises.length, 'to', currentPage - 1, ':', friends);
             allFriends.push(...friends);
         } else {
             hasMore = false;
         }
     }
 
-    console.log('All friends:', allFriends); // Log the final allFriends array
+    // console.log('All friends:', allFriends); // Log the final allFriends array
     return allFriends;
 }
 
@@ -195,8 +209,11 @@ if (localStorage.getItem('betterMDLhidedefaultStats') === 'true') {
 /*                                  Profiles                                  */
 /* -------------------------------------------------------------------------- */
 
-if (window.location.pathname.includes('/profile/')) {
+const profileUrlPattern = /^https:\/\/mydramalist\.com\/profile\/\w+$/;
+if (profileUrlPattern.test(window.location.href)) {
+
     importAll(require.context('./profile/', true, /\.js$/), /\.js$/);
+
 }
 
 /* -------------------------------------------------------------------------- */
@@ -204,7 +221,90 @@ if (window.location.pathname.includes('/profile/')) {
 /* -------------------------------------------------------------------------- */
 
 if (window.location.pathname.includes('/people/')) {
+
     importAll(require.context('./people/', true, /\.js$/), /\.js$/);
+
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                    Lists                                   */
+/* -------------------------------------------------------------------------- */
+
+if (window.location.pathname.includes('/list/')) {
+
+    importAll(require.context('./list/', true, /\.js$/), /\.js$/);
+
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                Custom lists                                */
+/* -------------------------------------------------------------------------- */
+
+if (window.location.pathname.includes(`${username}/lists`)) {
+
+    var savedListsButton = document.createElement("a");
+    savedListsButton.className = "btn white pull-right";
+    savedListsButton.textContent = "Saved Lists";
+    var createListButton = document.querySelector(".box-header a[href='/list/create']");
+    createListButton.parentNode.insertBefore(savedListsButton, createListButton.nextSibling);
+
+    // Store the original content
+    var originalListContent = document.querySelector(".col-lg-8.col-md-8 .box-body").innerHTML;
+
+    var savedLists = JSON.parse(localStorage.getItem("betterMDLbookmarkLists")) || [];
+
+    savedListsButton.addEventListener("click", function () {
+        var savedDetails = JSON.parse(localStorage.getItem("betterMDLbookmarkDetails")) || {};
+
+        // Get the container for the list items and clear its contents
+        var listContainer = document.querySelector(".col-lg-8.col-md-8 .box-body");
+        listContainer.innerHTML = "";
+
+        // Create a list item for each saved list and append it to the container
+        Object.keys(savedDetails).forEach(function (listUrl) {
+            if (savedLists.includes(listUrl)) {
+                var listDetails = savedDetails[listUrl];
+                var listItem = document.createElement("div");
+                listItem.className = "row custom-list-preview large mio-saved-list";
+                listItem.innerHTML = '<div class="list-type">public list</div>' +
+                    '<a class="text-primary title-primary" href="' + listUrl + '">' +
+                    '<b>' + listDetails.title + '</b></a>' +
+                    '<div class="list-bars text-black-lt">' +
+                    '<span class="m-r"><i class="fal fa-tv m-r-xs"></i> ' + listDetails.numTitles + ' titles</span>' +
+                    '<span class="m-r"><i class="fas fa-user m-r-xs"></i>' + listDetails.author + '</span>' +
+                    '<span class="m-r"><i class="far fa-clock m-r-xs"></i>' + listDetails.lastUpdated + '</span>' +
+                    '</div>';
+                listContainer.appendChild(listItem);
+
+                // Fetch the last updated date and number of titles from the list page
+                fetch(listUrl)
+                    .then(response => response.text())
+                    .then(html => {
+                        var parser = new DOMParser();
+                        var doc = parser.parseFromString(html, "text/html");
+                        var numTitlesText = doc.querySelector(".list-bars span:first-of-type").textContent.trim();
+                        var numTitles = numTitlesText.match(/\d+/)[0];
+                        var lastUpdatedText = doc.querySelector(".list-footer .text-muted").textContent.trim();
+                        lastUpdatedText = lastUpdatedText.replace("Lists are updated approximately every 5 minutes. ", "");
+                        var icon = doc.querySelector(".list-bars span:first-of-type i").outerHTML;
+                        listItem.querySelector(".list-bars span:first-of-type").innerHTML = icon + ' ' + numTitles + ' titles';
+                        listItem.querySelector(".list-bars span:last-of-type").innerHTML = '<i class="far fa-clock m-r-xs"></i>' + lastUpdatedText;
+                    });
+            }
+        });
+
+        if (savedListsButton.textContent === "Saved Lists") {
+            savedListsButton.textContent = "Custom Lists";
+            document.querySelector(".box-header a[href='/list/create']").style.display = "none";
+        } else {
+            listContainer.innerHTML = originalListContent;
+            savedListsButton.textContent = "Saved Lists";
+            document.querySelector(".box-header a[href='/list/create']").style.display = "inline-block";
+        }
+
+        window.scrollTo(0, 0);
+    });
+
 }
 
 /* -------------------------------------------------------------------------- */
@@ -243,4 +343,4 @@ export { colours };
 export { icons };
 export { statusNames };
 export { username };
-export { currentUrl };
+export { currentUrl, logPrefix, logStyle, errorStyle };

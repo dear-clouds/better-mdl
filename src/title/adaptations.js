@@ -63,7 +63,7 @@ if (adaptedFromMangaTag || adaptedFromWebtoonTag || adaptedFromManhuaTag || adap
     const variables = {
         search: nativeTitleValue,
     };
-    console.log('variables:', variables);
+    // console.log('variables:', variables);
     const apiUrl = 'https://graphql.anilist.co';
     const requestOptions = {
         method: 'POST',
@@ -76,7 +76,7 @@ if (adaptedFromMangaTag || adaptedFromWebtoonTag || adaptedFromManhuaTag || adap
             variables,
         }),
     };
-    console.log('AniList API request:', apiUrl, requestOptions);
+    // console.log('AniList API request:', apiUrl, requestOptions);
     fetch(apiUrl, requestOptions)
         .then(response => response.json())
         .then(data => {
@@ -100,7 +100,7 @@ if (adaptedFromMangaTag || adaptedFromWebtoonTag || adaptedFromManhuaTag || adap
             return data;
         })
         .then(data => {
-            console.log('AniList API response:', data);
+            // console.log('AniList API response:', data);
             const media = data.data.Media;
 
             // Remove the loading message

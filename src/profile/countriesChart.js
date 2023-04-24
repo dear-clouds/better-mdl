@@ -55,8 +55,18 @@ d3Script.onload = function () {
                 .attr('transform', 'translate(150,150)');
 
             colours[7] = 'var(--mdl-primary)';
+            const shuffleArray = (array) => {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            };
+
+            const shuffledColours = shuffleArray(Object.values(colours));
             const colorScale = d3.scaleOrdinal()
-                .range(Object.values(colours));
+                .range(shuffledColours);
+
 
             const pie = d3.pie()
                 .value(d => d.count);

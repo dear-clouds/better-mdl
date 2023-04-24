@@ -1,3 +1,4 @@
+import { logPrefix, logStyle, errorStyle } from "../index.js";
 /* ------------------------ Add external sites icons ------------------------ */
 
 // Get the native title value
@@ -13,8 +14,8 @@ const filmTitleValue = filmTitleLink.textContent.trim();
 const tmdbBaseUrl = 'https://api.themoviedb.org/3';
 const apiKey = 'd12b33d3f4fb8736dc06f22560c4f8d4';
 
-console.log(nativeTitleValue);
-console.log(filmTitleValue);
+// console.log(nativeTitleValue);
+// console.log(filmTitleValue);
 
 // Find media type
 let mediaType;
@@ -44,7 +45,7 @@ if (localStorage.getItem('betterMDLTMDBSearch') === 'true') {
         tmdbSearchUrl = `${tmdbBaseUrl}/search/multi?api_key=${apiKey}&query=${encodeURIComponent(nativeTitleValue)}`;
     }
 
-    console.log(tmdbSearchUrl);
+    // console.log(tmdbSearchUrl);
 
     // Check if we get a result from TMDB for the native title search
     fetch(tmdbSearchUrl)
@@ -94,7 +95,7 @@ if (localStorage.getItem('betterMDLTMDBSearch') === 'true') {
                                     fetch(`https://www.omdbapi.com/?apikey=${omdbkey}&i=${idsData.imdb_id}&plot=short&r=json`)
                                         .then(response => response.json())
                                         .then(data => {
-                                            console.log(data);
+                                            // console.log(data);
                                             const ratings = data.Ratings;
 
                                             // Create a div to hold the ratings and logos
@@ -174,7 +175,7 @@ if (localStorage.getItem('betterMDLTMDBSearch') === 'true') {
                             function searchSimkl(tmdbId, mediaType) {
                                 const type = mediaType === 'movie' ? 'movies' : 'tv';
                                 const simklSearchUrl = `https://simkl.com/search/?type=${type}&q=${tmdbId}`;
-                                console.log(simklSearchUrl);
+                                // console.log(simklSearchUrl);
 
                                 GM.xmlHttpRequest({
                                     method: 'GET',
@@ -199,7 +200,7 @@ if (localStorage.getItem('betterMDLTMDBSearch') === 'true') {
                             // Function to search for the title on Trakt
                             function searchTrakt(tmdbId) {
                                 const traktSearchUrl = `https://trakt.tv/search/tmdb?query=${tmdbId}`;
-                                console.log(traktSearchUrl);
+                                // console.log(traktSearchUrl);
 
                                 GM.xmlHttpRequest({
                                     method: 'GET',
@@ -223,7 +224,7 @@ if (localStorage.getItem('betterMDLTMDBSearch') === 'true') {
                             // Function to search for the title on Letterboxd
                             function searchLetterboxd(tmdbId, mediaType) {
                                 const letterboxdSearchUrl = `https://letterboxd.com/search/films/tmdb:${tmdbId}/`;
-                                console.log(letterboxdSearchUrl);
+                                // console.log(letterboxdSearchUrl);
                                 return new Promise((resolve, reject) => {
                                     GM.xmlHttpRequest({
                                         method: 'GET',
@@ -256,7 +257,7 @@ if (localStorage.getItem('betterMDLTMDBSearch') === 'true') {
             // If we don't get a result from TMDB for the native title search, create a simple search link using filmTitleValue
             createWebsiteIcon('TheMovieDB', `https://www.themoviedb.org/search?query=${encodeURIComponent(filmTitleValue)}`);
             shareContainer.insertBefore(websiteIconsContainer, tmdbIcon.nextSibling);
-            throw new Error('No results found for native title');
+            console.error(logPrefix, errorStyle, "No results found for native title");
         })
         .catch(error => console.error(error));
 }
@@ -267,7 +268,7 @@ searchPlex(filmTitleValue);
 
 function searchDramaOtaku(nativeTitleValue) {
     const DramaOtakuSearchUrl = `https://drama-otaku.com/?s=${encodeURIComponent(nativeTitleValue)}`;
-    console.log(DramaOtakuSearchUrl);
+    // console.log(DramaOtakuSearchUrl);
     return new Promise((resolve, reject) => {
         GM.xmlHttpRequest({
             method: 'GET',
@@ -299,7 +300,7 @@ function searchDramaOtaku(nativeTitleValue) {
 
 function searchJFDB(nativeTitleValue) {
     const JFDBSearchUrl = `https://jfdb.jp/en/search/title/?KW=${encodeURIComponent(nativeTitleValue)}`;
-    console.log(JFDBSearchUrl);
+    // console.log(JFDBSearchUrl);
     return new Promise((resolve, reject) => {
         GM.xmlHttpRequest({
             method: 'GET',
@@ -329,7 +330,7 @@ function searchJFDB(nativeTitleValue) {
 }
 function searchAsianWiki(nativeTitleValue) {
     const AsianWikiSearchUrl = `https://asianwiki.com/index.php?title=Special%253ASearch&search=${encodeURIComponent(nativeTitleValue)}`;
-    console.log(AsianWikiSearchUrl);
+    // console.log(AsianWikiSearchUrl);
     return new Promise((resolve, reject) => {
         GM.xmlHttpRequest({
             method: 'GET',
@@ -355,7 +356,7 @@ function searchAsianWiki(nativeTitleValue) {
 }
 function searchPlex(nativeTitleValue) {
     const PlexSearchUrl = `https://app.plex.tv/desktop/#!/search?query=${encodeURIComponent(filmTitleValue)}`;
-    console.log(PlexSearchUrl);
+    // console.log(PlexSearchUrl);
     return new Promise((resolve, reject) => {
         GM.xmlHttpRequest({
             method: 'GET',

@@ -18,7 +18,7 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 
 ## Installation
 
-1. Install <a href="https://www.tampermonkey.net/" target="_blank">Tampermonkey</a> for your browser (or you preferred Userscripts Manager)
+1. Install <a href="https://www.tampermonkey.net/" target="_blank">Tampermonkey</a> for your browser (or your preferred Userscripts Manager)
 
 2. Install my userscript by clicking [here](https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js) and click "Install".
 
@@ -46,10 +46,12 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 
 - Back to Top button
 - Hide comments with defined terms
+- Option to hide the default MDL stats on profile
 
 #### Profile
 
 - Titles by Country
+- Option to hide share icons on drama & people
 
 #### Title pages
 

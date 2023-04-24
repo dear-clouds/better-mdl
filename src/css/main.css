@@ -225,3 +225,11 @@ th.episodes {
     z-index: 9999;
   }
   
+  .row.custom-list-preview.large {
+    padding: 15px;
+  }
+
+  .mio-saved-list:not(:last-child) {
+    border-bottom: 1px solid var(--mdl-background);
+  }
+  
