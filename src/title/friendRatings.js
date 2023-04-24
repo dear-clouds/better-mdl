@@ -4,7 +4,7 @@ import { token, getAllFriends, logPrefix, logStyle } from "../index.js";
 
 // Load favorite friends from local storage
 function loadFavoriteFriends() {
-    const storedFavorites = localStorage.getItem('BetterMDL-FavFriends');
+    const storedFavorites = localStorage.getItem('betterMDLFavFriends');
     return storedFavorites ? JSON.parse(storedFavorites) : [];
 }
 
@@ -69,7 +69,7 @@ async function checkUserList(titleId) {
 
         // Update local storage
         const updatedFavorites = friendsWithFavorites.filter(friend => friend.favorite).map(friend => friend.username);
-        localStorage.setItem('BetterMDL-FavFriends', JSON.stringify(updatedFavorites));
+        localStorage.setItem('betterMDLFavFriends', JSON.stringify(updatedFavorites));
 
         // Toggle the class of the heart icon
         const $heartIcon = $(this).find('i');
