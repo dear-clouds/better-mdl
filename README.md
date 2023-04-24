@@ -1,4 +1,4 @@
-<center><img src="https://raw.githubusercontent.com/dear-clouds/better-mdl/main/images/Logo.png" width="300px"></center>
+<p align="center"><img src="https://raw.githubusercontent.com/dear-clouds/better-mdl/main/images/Logo.png" width="300px"></p>
 <h3 align="center">Enhance your <a href="https://mydramalist.com/" target="_blank">MyDramaList</a> experience~</h3>
 
 <p align="center">
