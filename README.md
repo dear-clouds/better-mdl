@@ -1,5 +1,4 @@
-<h1 align="center">
-Better MDL 🤍</h1>
+<center><img src="https://raw.githubusercontent.com/dear-clouds/better-mdl/main/images/Logo.png" width="300px"></center>
 <h3 align="center">Enhance your <a href="https://mydramalist.com/" target="_blank">MyDramaList</a> experience~</h3>
 
 <p align="center">
@@ -7,8 +6,6 @@ Better MDL 🤍</h1>
 	<a href="https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js"><img src="https://img.shields.io/github/package-json/v/dear-clouds/better-mdl?colorA=846D62&colorB=a8a29c&style=for-the-badge"></a>
     <a href="https://github.com/dear-clouds/better-mdl/issues"><img src="https://img.shields.io/github/license/dear-clouds/better-mdl?colorA=846D62&colorB=a8a29c&style=for-the-badge"></a>
 </p>
-
-<center><img src="https://dear-clouds.carrd.co/assets/images/image06.jpg"></center>
 
 Better MDL is a project i'm working on to enhance the website. I've been using MDL since the very beginning and it hasn't improved that much over the years. So here I am, trying to make the website more friendly and modern!
 
@@ -28,13 +25,31 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 
 ### How to use / customize (MAKE SURE TO READ)
 
-- For other website icons not in the settings, the first time you go on a title page, you will get asked if you want to allow a website on a screen <a href="https://imgur.com/E1eWJJW" target="_blank">like this</a>. Simply allow or forbid the websites you want.
+- For other website icons not in the settings, the first time you go on a title page, you will get asked if you want to allow a website on a screen <a href="https://imgur.com/E1eWJJW" target="_blank">like this</a>. Simply allow or forbid the websites you want. <details>
+  <summary>List of currently supported websites</summary>
+  
+  * https://simkl.com
+  * https://trakt.tv
+  * https://letterboxd.com
+  * https://drama-otaku.com
+  * https://jfdb.jp
+  * https://asianwiki.com
+  * https://app.plex.tv
+
+  #### Feel free to request more websites!
+</details>
 
 - The first time you're using the Thumbnail View on a page, it might take a little while to load all the posters, especially if there's a lot of titles or if you have slow internet, just be patient.
 
 - It might take a little while to show all your Friend ratings, especially if you have many friends or if you have slow internet, just be patient. Also to favorite/unfavorite a friend, just click the heart. It will reflect the change on refresh.
 
 - For the pie chart "Titles by Country", the colors are the ones you defined in your settings for the status Currently Watching, Planned etc. (might change later)
+
+- To show your favorite titles on your profile for other BetterMDL users to see, you MUST create a Public List named "[Better MDL: Favorites](https://mydramalist.com/list/1zEzQND4)". It must be this exact title for it to work.
+
+- To see all the lists you bookmarked, just go to your custom lists and you will see a new button "Saved Lists".
+
+- To export your dramalist in .csv, go to your dramalist and a new button will appear at the bottom right of the page.
 
 ### Known Bugs
 

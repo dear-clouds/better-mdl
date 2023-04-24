@@ -29,8 +29,11 @@
   },
   "dependencies": {
     "@emoji-mart/data": "^1.1.2",
+    "@simonwep/pickr": "^1.8.2",
     "chroma-js": "^2.4.2",
     "emoji-mart": "^5.5.2",
-    "jquery": "^3.6.4"
+    "fontawesome-iconpicker": "^3.2.0",
+    "jquery": "^3.6.4",
+    "jquery-minicolors": "^2.1.10"
   }
 }

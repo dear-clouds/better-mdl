@@ -223,13 +223,17 @@ th.episodes {
     height: 100%;
     pointer-events: none;
     z-index: 9999;
-  }
-  
-  .row.custom-list-preview.large {
-    padding: 15px;
-  }
+}
 
-  .mio-saved-list:not(:last-child) {
+.row.custom-list-preview.large {
+    padding: 15px;
+}
+
+.mio-saved-list:not(:last-child) {
     border-bottom: 1px solid var(--mdl-background);
-  }
-  
+}
+
+.minicolors-theme-bootstrap .minicolors-swatch {
+    top: 8px !important;
+    left: 8px !important;
+}

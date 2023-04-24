@@ -1,5 +1,8 @@
 import { colours } from '../index.js';
 import { icons } from '../index.js';
+import 'jquery-minicolors/jquery.minicolors.css';
+import $ from 'jquery';
+import 'jquery-minicolors';
 
 // Get a reference to the div we created earlier
 let betterMDLDiv = $();
@@ -73,7 +76,47 @@ defaultStatsLabel.append(defaultStatsTooltip);
 defaultStatsTooltip.append(defaultStatsTooltipImage);
 defaultStatsCheck.append(defaultStatsCheckbox, defaultStatsLabel);
 
-const optionsCol = $('<div class="col-md-4"></div>').append(tmdbCheck, ratingsCheck, shareCheck, defaultStatsCheck);
+const storageUsageDiv = $('<div class="alert alert-warning" role="alert" style="margin-top: 20px;"></div>').css('text-align', 'center');
+
+// Create a button to reset the storage
+const resetButton = $('<br><button class="btn btn-danger">Reset BetterMDL</button>');
+resetButton.on('click', function() {
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith('betterMDL')) {
+      localStorage.removeItem(key);
+    }
+  }
+  location.reload(); // Reload the page to apply the changes
+});
+
+// Add the button to the storage usage div
+storageUsageDiv.append(resetButton);
+
+// Update the storage usage display on page load
+window.addEventListener('load', function () {
+    let totalSize = 0;
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith('betterMDL')) {
+        const value = localStorage.getItem(key);
+        totalSize += value.length * 2;
+      }
+    }
+    
+    let storageUsage;
+    if (totalSize < 1024 * 1024) {
+      storageUsage = (totalSize / 1024).toFixed(2) + ' KB';
+    } else if (totalSize < 1024 * 1024 * 1024) {
+      storageUsage = (totalSize / (1024 * 1024)).toFixed(2) + ' MB';
+    } else {
+      storageUsage = (totalSize / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+    }
+    
+    storageUsageDiv.prepend(`BetterMDL is currently using ${storageUsage} of storage<br>`);
+  });
+  
+const optionsCol = $('<div class="col-md-4"></div>').append(tmdbCheck, ratingsCheck, shareCheck, defaultStatsCheck, storageUsageDiv);
 tmdbGroup.append(optionsCol);
 
 // Load the value of the TMDB search checkbox from local storage and set the checkbox state
@@ -163,10 +206,27 @@ for (let key in colours) {
     }
 
     const label = $('<label class="control-label"></label>').text(labelText);
+    const inputGroup = $('<div class="input-group"></div>');
     const input = $(`<input type="text" class="form-control" name="color_${key}" value="${colours[key]}">`);
-    const formGroup = $('<div class="form-group"></div>').append(label, input);
+    const span = $('<span class="input-group-addon"></span>');
+    const icon = $('<i class="fa fa-paint-brush"></i>');
+    span.on('click', function () {
+        input.minicolors('show');
+    });
+    span.append(icon);
+    inputGroup.append(input, span);
+    const formGroup = $('<div class="form-group"></div>').append(label, inputGroup);
     colorColumn.append(formGroup);
+    input.minicolors({
+        defaultValue: colours[key],
+        opacity: false,
+        change: function(value) {
+            input.val(value);
+        },
+        theme: 'bootstrap'
+    });
 }
+
 
 const hideWordsLabel = $('<label class="control-label">Hide comments containing any of those terms (separated by comma)</label>');
 const hideWordsInput = $(`<input type="text" class="form-control" name="hide_words" value="${localStorage.getItem('betterMDLHideWords') ?? ''}">`);
@@ -186,10 +246,12 @@ formElement.append(hideWordsGroup);
 //     }
 // });
 
-
+// Add some explanatory text to the form
+const helpText = $('<div class="alert alert-info" role="alert">Enter the name of the icon (e.g. fa-bell) and the color value (e.g. #ff0000) that you want to use. You can find a list of available icons at <a href="https://fontawesome.com/icons" target="_blank">https://fontawesome.com/icons</a>.</div>');
 
 // Add the two columns to the form element
 const row = $('<div class="row"></div>').append(iconColumn, colorColumn, tmdbGroup);
+row.prepend(helpText);
 formElement.append(row);
 
 // Add a submit button to the form
@@ -197,10 +259,6 @@ const submitButton = $('<button type="submit" class="btn btn-primary">Save Chang
 const buttonColumn = $('<div class="col-md-12"></div>').append(submitButton);
 const buttonRow = $('<div class="row"></div>').append(buttonColumn);
 formElement.append(buttonRow);
-
-// Add some explanatory text to the form
-const helpText = $('<div class="alert alert-info" role="alert">Enter the name of the icon (e.g. fa-bell) and the color value (e.g. #ff0000) that you want to use. You can find a list of available icons at <a href="https://fontawesome.com/icons" target="_blank">https://fontawesome.com/icons</a>.</div>');
-formElement.prepend(helpText);
 
 // Add the form to the div
 betterMDLDiv.append(formElement);
