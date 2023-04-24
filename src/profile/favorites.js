@@ -23,7 +23,7 @@ fetch(listsUrl)
           }));
 
           // Trigger lazy-loading of images
-          window.scrollTo(0, document.body.scrollHeight);
+          // window.scrollTo(0, document.body.scrollHeight);
         
           // Wait for images to load
           window.addEventListener("load", () => {
