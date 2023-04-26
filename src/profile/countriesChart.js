@@ -1,14 +1,16 @@
 import { colours } from '../index.js';
 
 /* ---------------------- Force rows to be same height ---------------------- */
-window.addEventListener('load', function () {
-    var leftColumn = document.querySelector('.stats-section .col-sm-6:first-child');
-    var rightColumn = document.querySelector('.stats-section .col-sm-6:last-child');
-    var maxHeight = Math.max(leftColumn.offsetHeight, rightColumn.offsetHeight);
-    leftColumn.style.height = maxHeight + 'px';
-    rightColumn.style.height = maxHeight + 'px';
-});
+if (localStorage.getItem('betterMDLhidedefaultStats') === 'true') {
 
+    window.addEventListener('load', function () {
+        var leftColumn = document.querySelector('.stats-section .col-sm-6:first-child');
+        var rightColumn = document.querySelector('.stats-section .col-sm-6:last-child');
+        var maxHeight = Math.max(leftColumn.offsetHeight, rightColumn.offsetHeight);
+        leftColumn.style.height = maxHeight + 'px';
+        rightColumn.style.height = maxHeight + 'px';
+    });
+}
 /* ---------------------------- Titles by Country --------------------------- */
 // Find the username from the profile page URL
 const ProfileUsername = window.location.pathname.split('/').pop();
@@ -109,7 +111,7 @@ d3Script.onload = function () {
             // Add a title to the chart
             d3.select('.bettermdl-stats')
                 .insert('h6', ':first-child')
-                .html('Titles by Country <br><small><i>(Does not include Planned & Not Interested)</i></small>')
+                .html('Titles by Country')
                 .style('text-align', 'center')
                 .style('margin-top', '8px');
 
