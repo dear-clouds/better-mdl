@@ -176,46 +176,46 @@ const existingFilterBox = document.querySelector('.filter-box');
 existingFilterBox.parentNode.insertBefore(newFilterBox, existingFilterBox.nextSibling);
 
 // Add an event listener to the pagination links
-document.querySelector('.pagination').addEventListener('click', (e) => {
-  if(e.target.tagName === 'A') { // If clicked target is a link
-    setTimeout(() => {
-      // Reset statuses
-      showStatuses = {
-        1: null,
-        2: null,
-        3: null,
-        4: null,
-        5: null,
-        6: null
-      };
+const paginationElement = document.querySelector('.pagination');
+if (paginationElement) {
+  paginationElement.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') { // If clicked target is a link
+      setTimeout(() => {
+        // Reset statuses
+        showStatuses = {
+          1: null,
+          2: null,
+          3: null,
+          4: null,
+          5: null,
+          6: null
+        };
 
-      restoreAllTitles();
+        restoreAllTitles();
 
-      // Clear the checkboxes
-      for (let status in statuses) {
-        document.querySelector(`#hideStatus${status}Checkbox`).checked = false;
-      }
+        // Clear the checkboxes
+        for (let status in statuses) {
+          document.querySelector(`#hideStatus${status}Checkbox`).checked = false;
+        }
 
-      // Re-run script
-      const titleElements = document.querySelectorAll('.box[id^="mdl-"]');
-      const titleIds = Array.from(titleElements).map(element => element.id.split('-')[1]);
-      const params = new URLSearchParams({
-        lang: 'en-US',
-        mylist: titleIds.join('-')
-      });
-      const apiUrl = `${baseUrl}?${params.toString()}`;
-      $.getJSON(apiUrl, function (json) {
-        const titles = document.querySelectorAll('.text-primary.title');
-        titles.forEach(title => {
-          const titleId = title.querySelector('.btn-manage-list').getAttribute('data-id');
-          const movie = json.mylist.find(item => item.rid.toString() === titleId);
-          const hasStatus = !!movie;
-          showTitle(title, movie?.status, hasStatus);
+        // Re-run script
+        const titleElements = document.querySelectorAll('.box[id^="mdl-"]');
+        const titleIds = Array.from(titleElements).map(element => element.id.split('-')[1]);
+        const params = new URLSearchParams({
+          lang: 'en-US',
+          mylist: titleIds.join('-')
         });
-      });
-    }, 1000); // Wait 1s for the content to load
-  }
-});
-
-
-
+        const apiUrl = `${baseUrl}?${params.toString()}`;
+        $.getJSON(apiUrl, function (json) {
+          const titles = document.querySelectorAll('.text-primary.title');
+          titles.forEach(title => {
+            const titleId = title.querySelector('.btn-manage-list').getAttribute('data-id');
+            const movie = json.mylist.find(item => item.rid.toString() === titleId);
+            const hasStatus = !!movie;
+            showTitle(title, movie?.status, hasStatus);
+          });
+        });
+      }, 1000); // Wait 1s for the content to load
+    }
+  });
+}

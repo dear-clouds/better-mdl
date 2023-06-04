@@ -8,26 +8,28 @@ const currentUrl = window.location.href;
 
 function hideComments() {
     // Get the list of words to hide from local storage
-    const hideWords = localStorage.getItem("betterMDLHideWords").trim();
-    if (!hideWords) {
-        return;
-    }
-    const wordsArray = hideWords.split(",");
+    const hideWords = localStorage.getItem("betterMDLHideWords");
+    if (hideWords !== null) {
+        const trimmedHideWords = hideWords.trim();
+        if (trimmedHideWords !== "") {
+            const wordsArray = trimmedHideWords.split(",");
 
-    // Loop through all comments and check if they contain any of the words to hide
-    $('div#cmtsapp li.post.comment').each(function () {
-        const commentText = $(this).find(".post-message").text().toLowerCase();
-        for (const word of wordsArray) {
-            if (commentText.includes(word.trim().toLowerCase())) {
-                $(this).hide();
-                console.log(logPrefix, logStyle, 
-                    `Comment hidden by "${word.trim().toLowerCase()}":`,
-                    commentText
-                );
-                break;
-            }
+            // Loop through all comments and check if they contain any of the words to hide
+            $('div#cmtsapp li.post.comment').each(function () {
+                const commentText = $(this).find(".post-message").text().toLowerCase();
+                for (const word of wordsArray) {
+                    if (commentText.includes(word.trim().toLowerCase())) {
+                        $(this).hide();
+                        console.log(logPrefix, logStyle,
+                            `Comment hidden by "${word.trim().toLowerCase()}":`,
+                            commentText
+                        );
+                        break;
+                    }
+                }
+            });
         }
-    });
+    }
 }
 // Check if the current URL matches the patterns we want to run the code on
 if (
