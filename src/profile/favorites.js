@@ -1,3 +1,6 @@
+
+import { logPrefix, logStyle } from "../index.js";
+
 const username = window.location.pathname.match(/^\/profile\/([^/]+)/)[1];
 const listsUrl = `https://mydramalist.com/profile/${username}/lists`;
 fetch(listsUrl)
@@ -9,7 +12,7 @@ fetch(listsUrl)
     const listLink = Array.from(doc.querySelectorAll(".col-sm-5.col-lg-6.col-md-6 .title-primary"))
       .find(link => link.textContent === listTitle)
       ?.getAttribute("href");
-    console.log(`Found link for list: ${listLink}`);
+    console.log(logPrefix, logStyle, `Found link for list: ${listLink}`);
     if (listLink) {
       fetch(`https://mydramalist.com${listLink}`)
         .then(response => response.text())

@@ -108,7 +108,8 @@ if (adaptedFromMangaTag || adaptedFromWebtoonTag || adaptedFromManhuaTag || adap
 
             if (media) {
                 const cardDiv = document.createElement('div');
-                cardDiv.classList.add('card', 'my-3');
+                cardDiv.classList.add('card');
+                cardDiv.style.marginTop = '10px';
 
                 const contentRow = document.createElement('div');
                 contentRow.classList.add('row', 'no-gutters');

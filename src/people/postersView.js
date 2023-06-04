@@ -1,4 +1,4 @@
-import { token } from "../index.js";
+import { token, logPrefix, logStyle } from "../index.js";
 import { colours } from '../index.js';
 import { icons } from '../index.js';
 import { statusNames } from '../index.js';
@@ -15,10 +15,8 @@ $('table.film-list').each(function () {
     let viewMode = 'Thumbnail'; // Set the initial view mode to thumbnail
     const viewModes = ['Thumbnail', 'Poster', 'List']; // Define the view modes
 
-    // Define the view mode button
     const $viewModeBtn = $('<button>').addClass('btn btn-secondary view-mode-btn mx-1').append($('<i>').addClass(getViewModeIcon(viewMode)).attr('title', 'Change View'));
 
-    // Define the click handler for the view mode button
     $viewModeBtn.click(function () {
         const currentViewIndex = viewModes.indexOf(viewMode);
         viewMode = viewModes[(currentViewIndex + 1) % viewModes.length]; // Cycle through the view modes
@@ -56,18 +54,13 @@ $('table.film-list').each(function () {
 
         // If the user selected a new sort option
         if (newIndex !== currentSortIndex) {
-            // Update the current sort index
             currentSortIndex = newIndex;
-            // Update the sort button text
             $sortButton.text('Sort by ' + sortOptions[newIndex].label);
-            // Remove any existing sort icons
             $orderButton.find('.sort-icon').removeClass('fas fa-arrow-up fas fa-arrow-down');
-            // Set the default sort icon (up arrow)
             $orderButton.find('.sort-icon').addClass(sortOptions[newIndex].icons[0]);
         }
     });
 
-    // Append the buttons and dropdown to a container div and add it to the table
     $table.before(
         $('<div>').addClass('mio-filters btn-group')
             .append($viewModeBtn)
@@ -75,9 +68,8 @@ $('table.film-list').each(function () {
             .append($sortDropdown)
     );
 
-    // Define a helper function to get the appropriate icon for a given view mode
     function getViewModeIcon(viewMode) {
-        console.log('Current view mode:', viewMode);
+        console.log(logPrefix, logStyle, 'Current view mode:', viewMode);
         switch (viewMode) {
             case 'Thumbnail':
                 return 'fas fa-th';
@@ -116,64 +108,71 @@ $('table.film-list').each(function () {
 
         // toggle the view
         if (currentView === 'Thumbnail') {
-            // switch to thumbnail view
-            // Restore the original view
             $table.addClass('thumbnail-view');
             $table.removeClass('list-view');
-            // $table.find('tbody').empty().append($listView.find('tbody').contents());
+
             $viewModeBtn.find('i').removeClass('fa-th-list').addClass('fa-th');
 
             // Reapply the "Poster" column to the table if it doesn't exist
             if ($table.find('th:nth-child(2)').text() !== 'Poster') {
-
-                if (typeof (Storage) !== "undefined") {
-
+                if (typeof Storage !== 'undefined') {
                     // Get the cached poster URLs from local storage
-                    const cachedPosters = JSON.parse(localStorage.getItem('betterMDLPosters')) || {};
+                    const cachedPosters =
+                        JSON.parse(localStorage.getItem('betterMDLPosters')) || {};
 
                     // Add posters to the table
                     $table.find('th:nth-child(1)').after('<th>Poster</th>');
-                    $table.find('tbody tr').each(function () {
+                    $table.find('tbody tr').each(function (index) {
                         const titleCell = $(this).find('td:nth-child(2)');
                         const titleLink = titleCell.find('a');
                         const titleHref = titleLink.attr('href');
                         if (titleHref) {
                             // Check if the poster URL is cached
                             if (cachedPosters[titleHref]) {
-                                titleCell.before(`<td class="film-cover"><img src="${cachedPosters[titleHref]}" style="max-width: 70px;"></td>`);
+                                titleCell.before(
+                                    `<td class="film-cover"><img src="${cachedPosters[titleHref]}" style="max-width: 70px;"></td>`
+                                );
                             } else {
                                 // Fetch the poster URL and cache it
-                                $.get(titleHref, function (data) {
-                                    const posterUrl = $(data).find('.film-cover img').attr('src');
-                                    cachedPosters[titleHref] = posterUrl;
-                                    localStorage.setItem('betterMDLPosters', JSON.stringify(cachedPosters));
-                                    titleCell.before(`<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`);
-                                }).fail(function () {
-                                    // Image failed to load, try again
-                                    setTimeout(() => {
-                                        $.get(titleHref).done(function (data) {
-                                            const posterUrl = $(data).find('.film-cover img').attr('src');
-                                            cachedPosters[titleHref] = posterUrl;
-                                            localStorage.setItem('betterMDLPosters', JSON.stringify(cachedPosters));
-                                            titleCell.before(`<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`);
-                                        }).fail(function () {
-                                            // Image failed to load again, give up
-                                            titleCell.before('<td></td>');
-                                        });
-                                    }, 1000);
-                                });
+                                setTimeout(() => {
+                                    $.get(titleHref, function (data) {
+                                        const posterUrl = $(data).find('.film-cover img').attr('src');
+                                        cachedPosters[titleHref] = posterUrl;
+                                        localStorage.setItem(
+                                            'betterMDLPosters',
+                                            JSON.stringify(cachedPosters)
+                                        );
+                                        titleCell.before(
+                                            `<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`
+                                        );
+                                    }).fail(function () {
+                                        // Image failed to load, try again
+                                        setTimeout(() => {
+                                            $.get(titleHref)
+                                                .done(function (data) {
+                                                    const posterUrl = $(data)
+                                                        .find('.film-cover img')
+                                                        .attr('src');
+                                                    cachedPosters[titleHref] = posterUrl;
+                                                    localStorage.setItem(
+                                                        'betterMDLPosters',
+                                                        JSON.stringify(cachedPosters)
+                                                    );
+                                                    titleCell.before(
+                                                        `<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`
+                                                    );
+                                                })
+                                                .fail(function () {
+                                                    // Image failed to load again, give up
+                                                    titleCell.before('<td></td>');
+                                                });
+                                        }, index * 125); // Delay requests by 125 milliseconds (8 requests per second)
+                                    });
+                                }, index * 125); // Delay requests by 125 milliseconds (8 requests per second)
                             }
                         } else {
                             titleCell.before('<td></td>');
                         }
-                    });
-
-                } else {
-                    // Local storage is not available
-                    $table.find('th:nth-child(1)').after('<th>Poster</th>');
-                    $table.find('tbody tr').each(function () {
-                        const titleCell = $(this).find('td:nth-child(2)');
-                        titleCell.before('<td></td>');
                     });
                 }
             }
@@ -181,6 +180,8 @@ $('table.film-list').each(function () {
             // switch to poster view
             $table.addClass('poster-view');
             $table.removeClass('thumbnail-view');
+
+            const movieIds = [];
 
             $table.find('tbody tr').each(function () {
                 const $tr = $(this);
@@ -194,6 +195,9 @@ $('table.film-list').each(function () {
                 const $episodes = $tr.find('.episodes');
                 const episodes = $episodes.length ? $episodes.text() : '';
                 const movieId = $tr.attr('class').match(/\bmdl-\S+/)[0].substr(4);
+
+                movieIds.push(movieId);
+
                 const $poster = $('<div>').addClass(`col-md-3 mdl-${movieId}`).append(
                     $('<div>').addClass('card h-100 film-cover text-center').append(
                         $('<a>').attr('href', movieUrl).append(
@@ -220,29 +224,34 @@ $('table.film-list').each(function () {
                     )
                 );
 
-                $.getJSON(`/v1/users/data?token=${token}&lang=en-US&mylist=${movieId}&t=z`, function (json) {
-                    const movie = json.mylist[0];
+                $tr.replaceWith($poster);
+            });
+
+            const baseUrl = 'https://mydramalist.com/v1/users/data';
+            const params = new URLSearchParams({
+                token: token,
+                lang: 'en-US',
+                mylist: movieIds.join('-'),
+                t: 'z'
+            });
+            const apiUrl = `${baseUrl}?${params.toString()}`;
+
+            $.getJSON(apiUrl, function (json) {
+                json.mylist.forEach(function (movie) {
                     if (movie && movie.status >= 1 && movie.status <= 6) {
-                        console.log(movie);
-                        const $button = $poster.find('.card-footer-btn');
+                        const $button = $(`.mdl-${movie.rid} .card-footer-btn`);
                         $button.css('background-color', colours[movie.status]);
                         $button.find('.movie-status').text(statusNames[movie.status]).css('color', 'var(--mdl-background)');
                         $button.find('i').removeClass().addClass(icons[movie.status]).css('color', 'var(--mdl-background)');
                     }
                 });
-
-
-                $tr.replaceWith($poster);
             });
-
 
             $viewModeBtn.find('i').removeClass('fa-th').addClass('fa-list');
 
             // Remove the "Poster" column from the table
             $table.find('th:contains("Poster")').remove();
             $table.find('td.film-cover').remove();
-
-            // Remove the <thead> from the table
             $table.find('thead').remove();
         } else {
             // switch to list view
@@ -255,19 +264,39 @@ $('table.film-list').each(function () {
             $table.find('th:contains("Poster")').remove();
             $table.find('td.film-cover').remove();
 
+            const movieIds = [];
+
             // Reapply the status icons before the title
             $table.find('tbody tr[class]').each(function () {
                 const classes = $(this).attr('class').split(' ');
                 const rid = classes.find(x => x.startsWith('mdl-')).substr(4);
-                $.getJSON(`/v1/users/data?token=${token}&lang=en-US&mylist=${rid}&t=z`, function (json) {
-                    const movie = json.mylist[0];
-                    if (movie.status >= 1 && movie.status <= 6) {
-                        $(this).find('.title a').prepend(`<i class="${icons[movie.status]}" style="color: ${colours[movie.status]};"></i> `);
-                    }
-                }.bind(this));
+
+                movieIds.push(rid);
             });
 
+            const baseUrl = 'https://mydramalist.com/v1/users/data';
+            const params = new URLSearchParams({
+                token: token,
+                lang: 'en-US',
+                mylist: movieIds.join('-'),
+                t: 'z'
+            });
+            const apiUrl = `${baseUrl}?${params.toString()}`;
+
+            $.getJSON(apiUrl, function (json) {
+                // Iterate over each movie object in the response
+                json.mylist.forEach(function (movie) {
+                    if (movie.status >= 1 && movie.status <= 6) {
+                        const row = $('table.film-list tbody tr.mdl-' + movie.rid);
+                        const titleLink = row.find('.title a');
+                        titleLink.prepend(
+                            `<i class="${icons[movie.status]}" style="color: ${colours[movie.status]};"></i> `
+                        );
+                    }
+                });
+            });
         }
+
     });
 
 
@@ -278,40 +307,64 @@ $('table.film-list').each(function () {
         const $icon = $(this).find('.hide-icon');
         const isHidden = $icon.hasClass('fa-eye');
         const $hiddenRows = $table.find('tbody > tr:hidden, tbody > div:hidden');
+
         if (isHidden) {
             $hiddenRows.show();
         } else {
+            const movieIds = [];
+
             $table.find('tbody > tr, tbody > div').each(function () {
                 const $row = $(this);
                 if ($row.is(':visible')) {
                     const classes = $row.attr('class').split(' ');
                     const rid = classes.find(x => x.startsWith('mdl-')).substr(4);
-                    $.getJSON(`/v1/users/data?token=${token}&lang=en-US&mylist=${rid}&t=z`, function (json) {
-                        const movie = json.mylist[0];
-                        if (movie.status === 2) {
-                            $row.hide();
-                        }
-                    });
+
+                    movieIds.push(rid);
                 }
             });
+
+            const baseUrl = 'https://mydramalist.com/v1/users/data';
+            const params = new URLSearchParams({
+                token: token,
+                lang: 'en-US',
+                mylist: movieIds.join('-'),
+                t: 'z'
+            });
+            const apiUrl = `${baseUrl}?${params.toString()}`;
+
+            $.getJSON(apiUrl, function (json) {
+                const hiddenMovieIds = json.mylist
+                    .filter(movie => movie.status === 2)
+                    .map(movie => movie.rid);
+
+                // Update the visibility of rows based on hiddenMovieIds
+                $table.find('tbody > tr, tbody > div').each(function () {
+                    const $row = $(this);
+                    const classes = $row.attr('class').split(' ');
+                    const rid = classes.find(x => x.startsWith('mdl-')).substr(4);
+
+                    if (hiddenMovieIds.includes(Number(rid))) {
+                        $row.hide();
+                    } else {
+                        $row.show();
+                    }
+                });
+            });
         }
+
         $icon.toggleClass('fa-eye-slash fa-eye');
     });
 
-
-
     /* ---------------------------- Sort by Dropdown ---------------------------- */
 
-    // Define a variable to keep track of the current sort option
     let currentSortOption = 1;
 
-    // Define a function to sort the table or poster view based on the current sort option
     function sortView(ascending) {
         const $sortIcon = $orderButton.find('.sort-icon');
         const option = sortOptions[currentSortOption];
         let $rows;
         if (viewMode === 'Poster') {
-            console.log('Sorting posters');
+            console.log(logPrefix, logStyle, 'Sorting posters');
             const $posterView = $('.poster-view');
             const $posterCardsContainer = $posterView.find('tbody');
             const $posterCards = $posterCardsContainer.children('.col-md-3');
@@ -379,48 +432,67 @@ $('table.film-list').each(function () {
 // Apply the "Poster" column to the table if it doesn't exist
 function addPosterColumn() {
     // Check if local storage is available
-    if (typeof (Storage) !== "undefined") {
-
+    if (typeof Storage !== 'undefined') {
         // Get the cached poster URLs from local storage
-        const cachedPosters = JSON.parse(localStorage.getItem('betterMDLPosters')) || {};
+        const cachedPosters =
+            JSON.parse(localStorage.getItem('betterMDLPosters')) || {};
 
         // Add posters to the table
         $('table.film-list th:nth-child(1)').after('<th>Poster</th>');
-        $('table.film-list tbody tr').each(function () {
+        $('table.film-list tbody tr').each(function (index) {
             const titleCell = $(this).find('td:nth-child(2)');
             const titleLink = titleCell.find('a');
             const titleHref = titleLink.attr('href');
             if (titleHref) {
                 // Check if the poster URL is cached
                 if (cachedPosters[titleHref]) {
-                    titleCell.before(`<td class="film-cover"><img src="${cachedPosters[titleHref]}" style="max-width: 70px;"></td>`);
+                    titleCell.before(
+                        `<td class="film-cover"><img src="${cachedPosters[titleHref]}" style="max-width: 70px;"></td>`
+                    );
                 } else {
                     // Fetch the poster URL and cache it
-                    $.get(titleHref, function (data) {
-                        const posterUrl = $(data).find('.film-cover img').attr('src');
-                        cachedPosters[titleHref] = posterUrl;
-                        localStorage.setItem('betterMDLPosters', JSON.stringify(cachedPosters));
-                        titleCell.before(`<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`);
-                    }).fail(function () {
-                        // Image failed to load, try again
-                        setTimeout(() => {
-                            $.get(titleHref).done(function (data) {
-                                const posterUrl = $(data).find('.film-cover img').attr('src');
-                                cachedPosters[titleHref] = posterUrl;
-                                localStorage.setItem('betterMDLPosters', JSON.stringify(cachedPosters));
-                                titleCell.before(`<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`);
-                            }).fail(function () {
-                                // Image failed to load again, give up
-                                titleCell.before('<td></td>');
-                            });
-                        }, 1000);
-                    });
+                    setTimeout(() => {
+                        $.get(titleHref, function (data) {
+                            const posterUrl = $(data)
+                                .find('.film-cover img')
+                                .attr('src');
+                            cachedPosters[titleHref] = posterUrl;
+                            localStorage.setItem(
+                                'betterMDLPosters',
+                                JSON.stringify(cachedPosters)
+                            );
+                            titleCell.before(
+                                `<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`
+                            );
+                        }).fail(function () {
+                            // Image failed to load, try again
+                            setTimeout(() => {
+                                $.get(titleHref)
+                                    .done(function (data) {
+                                        const posterUrl = $(data)
+                                            .find('.film-cover img')
+                                            .attr('src');
+                                        cachedPosters[titleHref] = posterUrl;
+                                        localStorage.setItem(
+                                            'betterMDLPosters',
+                                            JSON.stringify(cachedPosters)
+                                        );
+                                        titleCell.before(
+                                            `<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`
+                                        );
+                                    })
+                                    .fail(function () {
+                                        // Image failed to load again, give up
+                                        titleCell.before('<td></td>');
+                                    });
+                            }, index * 125); // Delay requests by 125 milliseconds (8 requests per second)
+                        });
+                    }, index * 125); // Delay requests by 125 milliseconds (8 requests per second)
                 }
             } else {
                 titleCell.before('<td></td>');
             }
         });
-
     } else {
         // Local storage is not available
         $('table.film-list th:nth-child(1)').after('<th>Poster</th>');
@@ -429,7 +501,6 @@ function addPosterColumn() {
             titleCell.before('<td></td>');
         });
     }
-
 }
 
 $(document).ready(function () {
@@ -437,15 +508,33 @@ $(document).ready(function () {
 });
 
 // Add the status icons before the title
-$('table.film-list tbody tr[class]').each(function () {
+const movieIds = [];
+$('table.film-list tbody tr[class]').each(function (index) {
     const classes = $(this).attr('class').split(' ');
-    const rid = classes.find(x => x.startsWith('mdl-')).substr(4);
-    $.getJSON(`/v1/users/data?token=${token}&lang=en-US&mylist=${rid}&t=z`, function (json) {
-        if (json.mylist.length > 0) {
-            const movie = json.mylist[0];
-            if (movie.status >= 1 && movie.status <= 6) {
-                $(this).find('.title a').prepend(`<i class="${icons[movie.status]}" style="color: ${colours[movie.status]};"></i> `);
-            }
-        }
-    }.bind(this));
+    // Find the class that starts with 'mdl-' and extract the ID
+    const rid = classes.find((x) => x.startsWith('mdl-')).substr(4);
+    movieIds.push(rid);
 });
+
+const baseUrl = 'https://mydramalist.com/v1/users/data';
+const params = new URLSearchParams({
+    token: token,
+    lang: 'en-US',
+    mylist: movieIds.join('-'),
+    t: 'z'
+});
+const apiUrl = `${baseUrl}?${params.toString()}`;
+
+$.getJSON(apiUrl, function (json) {
+    // Iterate over each movie object in the response
+    json.mylist.forEach(function (movie) {
+        if (movie.status >= 1 && movie.status <= 6) {
+            const row = $('table.film-list tbody tr.mdl-' + movie.rid);
+            const titleLink = row.find('.title a');
+            titleLink.prepend(
+                `<i class="${icons[movie.status]}" style="color: ${colours[movie.status]};"></i> `
+            );
+        }
+    });
+});
+

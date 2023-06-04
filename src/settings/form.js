@@ -76,6 +76,11 @@ defaultStatsLabel.append(defaultStatsTooltip);
 defaultStatsTooltip.append(defaultStatsTooltipImage);
 defaultStatsCheck.append(defaultStatsCheckbox, defaultStatsLabel);
 
+const defaultListLinkCheck = $('<div class="form-check form-check-inline"></div>');
+const defaultListLinkCheckbox = $('<input type="checkbox" class="form-check-input offset-md-1" name="defaultListLink_enabled" value="true">');
+const defaultListLinkLabel = $('<label class="form-check-label">Default list link to Currently Watching on Profile</label>');
+defaultListLinkCheck.append(defaultListLinkCheckbox, defaultListLinkLabel);
+
 const storageUsageDiv = $('<div class="alert alert-warning" role="alert" style="margin-top: 20px;"></div>').css('text-align', 'center');
 
 // Create a button to reset the storage
@@ -116,7 +121,7 @@ window.addEventListener('load', function () {
     storageUsageDiv.prepend(`BetterMDL is currently using ${storageUsage} of storage<br>`);
   });
   
-const optionsCol = $('<div class="col-md-4"></div>').append(tmdbCheck, ratingsCheck, shareCheck, defaultStatsCheck, storageUsageDiv);
+const optionsCol = $('<div class="col-md-4"></div>').append(tmdbCheck, ratingsCheck, shareCheck, defaultStatsCheck, defaultListLinkCheck, storageUsageDiv);
 tmdbGroup.append(optionsCol);
 
 // Load the value of the TMDB search checkbox from local storage and set the checkbox state
@@ -137,6 +142,11 @@ if (shareEnabled === 'true') {
 const defaultStatsEnabled = localStorage.getItem('betterMDLhidedefaultStats');
 if (defaultStatsEnabled === 'true') {
     defaultStatsCheckbox.prop('checked', true);
+}
+
+const defaultListLinkEnabled = localStorage.getItem('betterMDLdramalistLink');
+if (defaultListLinkEnabled === 'true') {
+    defaultListLinkCheckbox.prop('checked', true);
 }
 
 // Create a div to hold the form groups for the icons
@@ -299,6 +309,9 @@ formElement.submit(function (event) {
 
     const defaultStatsEnabled = defaultStatsCheckbox.prop('checked');
     localStorage.setItem('betterMDLhidedefaultStats', defaultStatsEnabled);
+
+    const defaultListLinkEnabled = defaultListLinkCheckbox.prop('checked');
+    localStorage.setItem('betterMDLdramalistLink', defaultListLinkEnabled);
 
     // Reload the page to apply the changes
     location.reload();

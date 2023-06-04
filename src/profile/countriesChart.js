@@ -14,7 +14,7 @@ if (localStorage.getItem('betterMDLhidedefaultStats') === 'true') {
 /* ---------------------------- Titles by Country --------------------------- */
 // Find the username from the profile page URL
 const ProfileUsername = window.location.pathname.split('/').pop();
-console.log('Username:', ProfileUsername);
+// console.log('Username:', ProfileUsername);
 
 // Load the D3.js library from a CDN
 const d3Script = document.createElement('script');
@@ -41,7 +41,7 @@ d3Script.onload = function () {
                 }
             });
 
-            console.log('Country counts:', countryCounts);
+            // console.log('Country counts:', countryCounts);
 
             const statsContainer = $('<div class="bettermdl-stats"></div>');
             $('div#chart-legend').before(statsContainer);

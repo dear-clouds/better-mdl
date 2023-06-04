@@ -46,6 +46,83 @@ importAll(require.context('./css/', true, /\.css$/));
 importAll(require.context('./common/', true, /\.js$/));
 
 /* -------------------------------------------------------------------------- */
+/*    Settings are customizable at https://mydramalist.com/account/profile    */
+/* -------------------------------------------------------------------------- */
+
+const storedIcons = localStorage.getItem('betterMDLIcons');
+const icons = storedIcons ? JSON.parse(storedIcons) : {
+    1: 'fas fa-spinner', // currently watching
+    2: 'fas fa-check', // completed
+    3: 'far fa-clock', // plan to watch
+    4: 'fas fa-pause', // on hold
+    5: 'fas fa-heart-broken', // dropped
+    6: 'fas fa-minus-circle', // not interested
+};
+
+const storedColours = localStorage.getItem('betterMDLColours');
+const colours = storedColours ? JSON.parse(storedColours) : {
+    1: '#85C1DC', // currently watching
+    2: '#A6D189', // completed
+    3: '#CA9EE6', // plan to watch
+    4: '#E5C890', // on hold
+    5: '#E78284', // dropped
+    6: '#BBBBBB', // not interested
+};
+
+for (let key in colours) {
+    $(`input[name=color_${key}]`).val(colours[key]);
+}
+for (let key in icons) {
+    $(`input[name=icon_${key}]`).val(icons[key]);
+}
+
+// Set the default values to true
+if (localStorage.getItem('betterMDLhideShareContainer') === null) {
+    localStorage.setItem('betterMDLhideShareContainer', 'true');
+}
+
+// Set the default values to false
+if (localStorage.getItem('betterMDLRatings') === null) {
+    localStorage.setItem('betterMDLRatings', 'false');
+}
+if (localStorage.getItem('betterMDLTMDBSearch') === null) {
+    localStorage.setItem('betterMDLTMDBSearch', 'false');
+}
+if (localStorage.getItem('betterMDLhidedefaultStats') === null) {
+    localStorage.setItem('betterMDLhidedefaultStats', 'false');
+}
+if (localStorage.getItem('betterMDLdramalistLink') === null) {
+    localStorage.setItem('betterMDLdramalistLink', 'false');
+}
+
+const statusNames = {
+    1: 'Watching',
+    2: 'Completed',
+    3: 'Planned',
+    4: 'On Hold',
+    5: 'Dropped',
+    6: 'Not Interested',
+};
+
+const username = $('div.mdl-dropdown-content').find('a[href^="/profile/"]').attr('href').split('/').pop();
+const currentUrl = window.location.href;
+
+/* -------------------------------------------------------------------------- */
+/*                        Hide the share icons & stats                        */
+/* -------------------------------------------------------------------------- */
+
+if (localStorage.getItem('betterMDLhideShareContainer') === 'true') {
+    $('div.share-container').hide();
+}
+
+if (localStorage.getItem('betterMDLhidedefaultStats') === 'true') {
+    $('#chart-legend').hide();
+    $('#radar-drama').hide();
+    $('#drama-chart-bar').hide();
+
+}
+
+/* -------------------------------------------------------------------------- */
 /*                                getAllFriends                               */
 /* -------------------------------------------------------------------------- */
 
@@ -113,77 +190,89 @@ export async function getAllFriends(token) {
 
 
 /* -------------------------------------------------------------------------- */
-/*    Settings are customizable at https://mydramalist.com/account/profile    */
+/*                               getAllComments                               */
 /* -------------------------------------------------------------------------- */
 
-const storedIcons = localStorage.getItem('betterMDLIcons');
-const icons = storedIcons ? JSON.parse(storedIcons) : {
-    1: 'fas fa-spinner', // currently watching
-    2: 'fas fa-check', // completed
-    3: 'far fa-clock', // plan to watch
-    4: 'fas fa-pause', // on hold
-    5: 'fas fa-heart-broken', // dropped
-    6: 'fas fa-minus-circle', // not interested
-};
+export async function getAllComments(token, pageId, type) {
+    const currentUser = username;
 
-const storedColours = localStorage.getItem('betterMDLColours');
-const colours = storedColours ? JSON.parse(storedColours) : {
-    1: '#85C1DC', // currently watching
-    2: '#A6D189', // completed
-    3: '#CA9EE6', // plan to watch
-    4: '#E5C890', // on hold
-    5: '#E78284', // dropped
-    6: '#BBBBBB', // not interested
-};
+    const processPage = async (page) => {
+        let url;
+        switch (type) {
+            case 'drama':
+                url = `https://mydramalist.com/v1/threads?t=${pageId}&c=title&page=${page}&lang=en-US&sort=recent&`;
+                break;
+            case 'actor':
+                url = `https://mydramalist.com/v1/threads?t=${pageId}&c=actor&page=${page}&lang=en-US&sort=recent&`;
+                break;
+            case 'list':
+                url = `https://mydramalist.com/v1/threads?t=${pageId}&c=clist&page=${page}&lang=en-US&sort=recent&`;
+                break;
+            default:
+                console.error('Invalid comment type:', type);
+                return null;
+        }
 
-for (let key in colours) {
-    $(`input[name=color_${key}]`).val(colours[key]);
+        const response = await fetch(url, {
+            headers: {
+                'authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            console.error(`Request failed on page ${page}: ${response.status} - ${response.statusText}`);
+            return null;
+        }
+
+        const json = await response.json();
+        console.log(logPrefix, logStyle, `Response for page ${page}:`, json);
+
+        if (json.error) {
+            console.error(`Error on page ${page}: ${json.error}`);
+            return null;
+        } else {
+            return json.comments;
+        }
+    };
+
+    const allComments = [];
+
+    const processAllPages = async (startPage) => {
+        const pagesToProcess = Array.from({ length: 5 }, (_, i) => startPage + i);
+        const pagePromises = pagesToProcess.map(page => processPage(page));
+
+        const commentsArrays = await Promise.all(pagePromises);
+
+        let moreCommentsExist = false;
+
+        commentsArrays.forEach((comments, i) => {
+            const page = pagesToProcess[i];
+            const statusMessage = `Processed page ${page}`;
+
+            console.log(logPrefix, logStyle, statusMessage);
+            document.getElementById('importProgress').textContent = statusMessage;
+
+            if (comments && comments.length > 0) {
+                moreCommentsExist = true;
+                console.log(logPrefix, logStyle, 'Comments on page', page, ':', comments);
+                const filteredComments = comments.filter(comment => comment.author === currentUser);
+                allComments.push(...filteredComments);
+            }
+        });
+
+        if (moreCommentsExist) {
+            // If there are comments on any of the pages, proceed to next set of pages
+            await processAllPages(startPage + 5);
+        }
+    };
+
+    // Start processing from the first page
+    await processAllPages(1);
+
+    return allComments;
 }
-for (let key in icons) {
-    $(`input[name=icon_${key}]`).val(icons[key]);
-}
 
-// Set the default values to true
-if (localStorage.getItem('betterMDLRatings') === null) {
-    localStorage.setItem('betterMDLRatings', 'true');
-}
-if (localStorage.getItem('betterMDLTMDBSearch') === null) {
-    localStorage.setItem('betterMDLTMDBSearch', 'true');
-}
-if (localStorage.getItem('betterMDLhideShareContainer') === null) {
-    localStorage.setItem('betterMDLhideShareContainer', 'true');
-}
-// Set the default values to false
-if (localStorage.getItem('betterMDLhidedefaultStats') === null) {
-    localStorage.setItem('betterMDLhidedefaultStats', 'false');
-}
 
-const statusNames = {
-    1: 'Watching',
-    2: 'Completed',
-    3: 'Planned',
-    4: 'On Hold',
-    5: 'Dropped',
-    6: 'Not Interested',
-};
-
-const username = $('div.mdl-dropdown-content').find('a[href^="/profile/"]').attr('href').split('/').pop();
-const currentUrl = window.location.href;
-
-/* -------------------------------------------------------------------------- */
-/*                        Hide the share icons & stats                        */
-/* -------------------------------------------------------------------------- */
-
-if (localStorage.getItem('betterMDLhideShareContainer') === 'true') {
-    $('div.share-container').hide();
-}
-
-if (localStorage.getItem('betterMDLhidedefaultStats') === 'true') {
-    $('#chart-legend').hide();
-    $('#radar-drama').hide();
-    $('#drama-chart-bar').hide();
-
-}
 
 /* -------------------------------------------------------------------------- */
 /*                        Tag next to my username hehe                        */
@@ -318,6 +407,16 @@ if (window.location.pathname.includes('/dramalist/')) {
 }
 
 /* -------------------------------------------------------------------------- */
+/*                                Profile Stats                               */
+/* -------------------------------------------------------------------------- */
+
+if (window.location.pathname.includes(`${username}/stats`)) {
+
+    importAll(require.context('./stats/', true, /\.js$/), /\.js$/);
+
+}
+
+/* -------------------------------------------------------------------------- */
 /*                                  Settings                                  */
 /* -------------------------------------------------------------------------- */
 
@@ -335,6 +434,15 @@ if (window.location.pathname.includes('/account/profile')) {
 if (currentUrl.match(/https:\/\/mydramalist\.com\/\d+\-.+/)) {
 
     importAll(require.context('./title/', true, /\.js$/), /\.js$/);
+
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   Search                                   */
+/* -------------------------------------------------------------------------- */
+if (window.location.href.includes('/shows') || window.location.href.includes('/search')) {
+
+    importAll(require.context('./search/', true, /\.js$/), /\.js$/);
 
 }
 

@@ -1,7 +1,6 @@
 .vscode/
 
 # Configs
-webpack.config.js
 package-lock.json
 
 # Logs
