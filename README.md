@@ -67,7 +67,7 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 - Back to Top button
 - Hide comments with defined terms
 - Option to hide the default MDL stats on profile
-- Autofill Start Date if title is Currently Watching and episode watched is 1
+- Autofill Start Date for "Currently Watching" titles after watching 1 episode
 
 #### Profile
 - Titles by Country
@@ -75,7 +75,7 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 - Bookmark lists & see saved lists on profile
 - Pin favorite titles on profile via a list (*suggested by [KC Drama LOVER](https://mydramalist.com/profile/KCDramaLOVER)*)
 - Import/See your comments made on drama/people/list  (*suggested by [Soju](https://mydramalist.com/profile/PearlMilkChaii)*)
-- Change the user's list link to the Currently Watching tab by default
+- Option to default list link on Profile directs to "Currently Watching" tab
 
 #### Title pages
 - Links to IMDB/Trakt etc.
