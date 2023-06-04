@@ -31,14 +31,18 @@ function hideComments() {
         }
     }
 }
+
 // Check if the current URL matches the patterns we want to run the code on
 if (
     currentUrl.match(/https:\/\/mydramalist\.com\/\d+\-.+/) ||
     currentUrl.match(/https:\/\/mydramalist\.com\/people\/\d+/) ||
     currentUrl.match(/https:\/\/mydramalist\.com\/list\/\w+/)
 ) {
-    const hideWords = localStorage.getItem("betterMDLHideWords").trim();
-    console.log(logPrefix, logStyle, "List of hidden words:", hideWords ? hideWords.split(",") : []);
+    const hideWords = localStorage.getItem("betterMDLHideWords");
+    if (hideWords !== null) {
+        const trimmedHideWords = hideWords.trim();
+        console.log(logPrefix, logStyle, "List of hidden words:", trimmedHideWords ? trimmedHideWords.split(",") : []);
+    }
     // Hide comments on initial page load
     hideComments();
 
