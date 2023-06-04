@@ -189,7 +189,6 @@ document.querySelector('.pagination').addEventListener('click', (e) => {
         6: null
       };
 
-      // Restore all titles
       restoreAllTitles();
 
       // Clear the checkboxes

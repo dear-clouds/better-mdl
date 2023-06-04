@@ -83,7 +83,7 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 - Link to Anilist for Adaptations
 - Add a heart to your liked people
 - Friend ratings & ability to put your favs at the top (_suggested by sailingmars_)
-- Average friends score (suggested by [Saarthak](https://mydramalist.com/profile/Srthk))
+- Average friends score (*suggested by [Saarthak](https://mydramalist.com/profile/Srthk)*)
 
 #### People pages
 - 3 Layout Views (Original, Thumbnails & Posters)

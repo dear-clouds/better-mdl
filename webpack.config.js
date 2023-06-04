@@ -22,6 +22,9 @@ module.exports = {
             path: require.resolve('path-browserify'),
         },
     },
+    output: {
+        publicPath: '/',
+    },
     plugins: [
         new WebpackUserscript({
             headers: {
