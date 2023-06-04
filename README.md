@@ -75,7 +75,7 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 - Bookmark lists & see saved lists on profile
 - Pin favorite titles on profile via a list (*suggested by [KC Drama LOVER](https://mydramalist.com/profile/KCDramaLOVER)*)
 - Import/See your comments made on drama/people/list  (*suggested by [Soju](https://mydramalist.com/profile/PearlMilkChaii)*)
-- Option to default list link on Profile directs to "Currently Watching" tab
+- Option to force list link on Profile to direct to "Currently Watching" tab
 
 #### Title pages
 - Links to IMDB/Trakt etc.
