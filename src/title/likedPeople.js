@@ -26,34 +26,44 @@ async function getActorLikeStatus(actorId) {
 }
 
 async function addHeartToLikedActors(actorId, actorElement) {
-    const liked = await getActorLikeStatus(actorId);
+    try {
+        const liked = await getActorLikeStatus(actorId);
 
-    if (liked) {
-        const heartIcon = '<p><i class="fas fa-heart" style="color: var(--mdl-red);"></i></p>';
-        const nameElement = actorElement.querySelector('.text-primary.text-ellipsis > b[itempropx="name"]');
-        const mainRoleElement = actorElement.querySelector('.text-muted');
-        if (mainRoleElement) {
-            mainRoleElement.insertAdjacentHTML('afterend', heartIcon);
-        } else if (nameElement) {
-            nameElement.insertAdjacentHTML('afterend', heartIcon);
-        } else {
-            console.error(logPrefix, errorStyle, `Actor name element not found for ID: ${actorId}`);
+        if (liked) {
+            const heartIcon = '<p><i class="fas fa-heart" style="color: var(--mdl-red);"></i></p>';
+            const nameElement = actorElement.querySelector('.text-primary.text-ellipsis > b[itempropx="name"]');
+            const mainRoleElement = actorElement.querySelector('.text-muted');
+            if (mainRoleElement) {
+                mainRoleElement.insertAdjacentHTML('afterend', heartIcon);
+            } else if (nameElement) {
+                nameElement.insertAdjacentHTML('afterend', heartIcon);
+            } else {
+                console.error(logPrefix, errorStyle, `Actor name element not found for ID: ${actorId}`);
+            }
         }
+    } catch (error) {
+        console.error(logPrefix, errorStyle, `Error processing actor ID: ${actorId}`, error);
     }
 }
 
-
 const actorElements = document.querySelectorAll('li.list-item.col-sm-4');
 
-actorElements.forEach(async actorElement => {
-    const actorUrl = actorElement.querySelector('a[href*="/people/"]').getAttribute('href');
-    const actorId = getActorIdFromUrl(actorUrl);
+async function processActors() {
+    const actorElements = document.querySelectorAll('li.list-item.col-sm-4');
 
-    if (actorId) {
-        console.log(logPrefix, logStyle, `Processing Actor ID: ${actorId}`);
-        await addHeartToLikedActors(actorId, actorElement);
+    for (let i = 0; i < actorElements.length; i++) {
+        const actorElement = actorElements[i];
+        const actorUrl = actorElement.querySelector('a[href*="/people/"]').getAttribute('href');
+        const actorId = getActorIdFromUrl(actorUrl);
+
+        if (actorId) {
+            console.log(logPrefix, logStyle, `Processing Actor ID: ${actorId}`);
+            await addHeartToLikedActors(actorId, actorElement);
+        }
+
+        // Introduce a delay of 1 second before processing the next actor
+        await new Promise(resolve => setTimeout(resolve, 1000));
     }
-});
+}
 
-
-
+processActors();

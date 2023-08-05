@@ -19,9 +19,7 @@ function updateFavoriteStatus(friends) {
 
 async function checkUserList(titleId) {
   const friendsData = await getAllFriends(token);
-  // console.log('Friends data:', friendsData);
 
-  // Update favorite status for all friends
   const friendsWithFavorites = updateFavoriteStatus(friendsData);
   console.log(logPrefix, logStyle, 'All Friends:', friendsWithFavorites);
 
@@ -46,17 +44,14 @@ async function checkUserList(titleId) {
 
   let scores = [];
 
-  // Check if the "Friends' Average Score" element already exists
   const $friendsAverageScore = $('.bettermdl-friends .average-score');
   if ($friendsAverageScore.length === 0) {
-    // Create the "Friends' Average Score" element if it doesn't exist
     const friendsAverageScoreHtml = `
         <div class="list-item p-a-0"><b class="inline">Friends' Average Score:</b> <span class="average-score">N/A</span></div>
         `;
     $('.bettermdl-friends .box-body').eq(1).prepend(friendsAverageScoreHtml);
   }
 
-  // Update the "Friends' Average Score" as we get friend data
   const $averageScore = $('.bettermdl-friends .average-score');
   let totalScore = 0;
   let count = 0;
@@ -69,13 +64,11 @@ async function checkUserList(titleId) {
     );
     selectedFriend.favorite = !selectedFriend.favorite;
 
-    // Update local storage
     const updatedFavorites = friendsWithFavorites
       .filter((friend) => friend.favorite)
       .map((friend) => friend.username);
     localStorage.setItem('betterMDLFavFriends', JSON.stringify(updatedFavorites));
 
-    // Toggle the class of the heart icon
     const $heartIcon = $(this).find('i');
     if (selectedFriend.favorite) {
       $heartIcon.removeClass('far').addClass('fas');
@@ -84,103 +77,102 @@ async function checkUserList(titleId) {
     }
   });
 
-  const friendsToCheckPerSecond = 8;
-  const delay = 1000 / friendsToCheckPerSecond;
+  const chunkSize = 5; // Number of friend lists to check at once
+  const delay = 1000 / chunkSize;
 
-  for (let i = 0; i < friendsWithFavorites.length; i++) {
-    if (i > 0 && i % friendsToCheckPerSecond === 0) {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second after checking 8 friends
+  for (let i = 0; i < friendsWithFavorites.length; i += chunkSize) {
+    const promises = []; // Array to hold the promises for this chunk of friends
+
+    for (let j = 0; j < chunkSize && i + j < friendsWithFavorites.length; j++) {
+      const friend = friendsWithFavorites[i + j];
+      const userListUrl = `https://mydramalist.com/dramalist/${friend.username}`;
+      console.log(logPrefix, logStyle, 'Checking friend list:', userListUrl);
+
+      promises.push(new Promise((resolve) => {
+        setTimeout(() => {
+          $.get(userListUrl, function (data) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(data, 'text/html');
+
+            const profileUrl = `https://mydramalist.com/profile/${friend.username}`;
+            const profileName = friend.display_name;
+            const avatar = friend.avatar_url;
+            let status = 'not on list';
+            let score = 'N/A';
+            let isTitleOnList = false;
+
+            for (let [key, value] of Object.entries(tableIds)) {
+              const table = doc.getElementById(value);
+              if (table && table.querySelector(`a[href*="/${titleId}"]`)) {
+                status = key.replace('_', ' ');
+                const link = table.querySelector(`a[href*="/${titleId}"]`);
+                const row = link && link.closest('tr');
+                const scoreElement = row && row.querySelector('.score');
+                score = scoreElement ? scoreElement.textContent : 'N/A';
+
+                if (score !== 'N/A' && score !== '0.0') {
+                  scores.push(parseFloat(score));
+                }
+
+                isTitleOnList = true;
+              }
+            }
+
+            if (isTitleOnList) {
+              $('.loading').remove();
+              friendData.push({ profileUrl, profileName, avatar, status, score });
+              let friendHtml = '';
+              friendHtml += `
+                        <div class="contributor" data-username="${friend.username}">
+                        <a class="author-avatar" href="${profileUrl}">
+                        <img class="avatar" src="${avatar}" alt="${profileName}'s avatar">
+                        </a>
+                        <div class="details">
+                        <div><a class="text-primary" href="${profileUrl}"><b>${profileName}</b></a></div>
+                        <div class="author-status">${status}</div>
+                        <div class="author-score"><i class="fas fa-star"></i> ${score}</div>
+                        </div>
+                        <div class="favorite" title="Make favorite"><i class="${friend.favorite ? 'fas' : 'far'} fa-heart" style="color: var(--mdl-red);"></i></div>
+                        </div>
+                        `;
+              if (friend.favorite) {
+                $('.bettermdl-friends .contributor-list').prepend(friendHtml);
+              } else {
+                $('.bettermdl-friends .contributor-list').append(friendHtml);
+              }
+
+              if (friend.favorite) {
+                $('.contributor[data-username="' + friend.username + '"] .favorite i')
+                  .removeClass('far')
+                  .addClass('fas');
+              } else {
+                $('.contributor[data-username="' + friend.username + '"] .favorite i')
+                  .removeClass('fas')
+                  .addClass('far');
+              }
+            }
+
+            if (friendData.length === friendsData.length) {
+              console.log(logPrefix, logStyle, 'Friend data with title info:', friendData);
+              if (friendData.length === 0) {
+                $('.bettermdl-friends .loading').text(
+                  'No friends have this title on their list. Time to makes new ones!'
+                );
+              } else {
+                $('.bettermdl-friends .loading').remove();
+              }
+            }
+
+            const scoresAverage = calculateAverageScore(scores);
+            updateFriendsScoreHtml(scoresAverage);
+
+            resolve();
+          });
+        }, j * delay);
+      }));
     }
 
-    const friend = friendsWithFavorites[i];
-    const userListUrl = `https://mydramalist.com/dramalist/${friend.username}`;
-    console.log(logPrefix, logStyle, 'Checking friend list:', userListUrl);
-
-    await new Promise((resolve) => setTimeout(resolve, i % friendsToCheckPerSecond * delay)); // Delay between each friend request
-
-    $.get(userListUrl, function (data) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(data, 'text/html');
-
-      const profileUrl = `https://mydramalist.com/profile/${friend.username}`;
-      const profileName = friend.display_name;
-      const avatar = friend.avatar_url;
-      let status = 'not on list';
-      let score = 'N/A';
-      let isTitleOnList = false;
-
-      // Check all six lists for each friend
-      for (let [key, value] of Object.entries(tableIds)) {
-        const table = doc.getElementById(value);
-        if (table && table.querySelector(`a[href*="/${titleId}"]`)) {
-          status = key.replace('_', ' ');
-          const link = table.querySelector(`a[href*="/${titleId}"]`);
-          const row = link && link.closest('tr');
-          const scoreElement = row && row.querySelector('.score');
-          score = scoreElement ? scoreElement.textContent : 'N/A';
-
-          // Only add valid scores to the array
-          if (score !== 'N/A' && score !== '0.0') {
-            scores.push(parseFloat(score));
-          }
-
-          isTitleOnList = true;
-        }
-      }
-
-      // If the title is on the friend's list, update the friendData and HTML
-      if (isTitleOnList) {
-        $('.loading').remove();
-        friendData.push({ profileUrl, profileName, avatar, status, score });
-        let friendHtml = '';
-        friendHtml += `
-                <div class="contributor" data-username="${friend.username}">
-                <a class="author-avatar" href="${profileUrl}">
-                <img class="avatar" src="${avatar}" alt="${profileName}'s avatar">
-                </a>
-                <div class="details">
-                <div><a class="text-primary" href="${profileUrl}"><b>${profileName}</b></a></div>
-                <div class="author-status">${status}</div>
-                <div class="author-score"><i class="fas fa-star"></i> ${score}</div>
-                </div>
-                <div class="favorite" title="Make favorite"><i class="${
-          friend.favorite ? 'fas' : 'far'
-        } fa-heart" style="color: var(--mdl-red);"></i></div>
-                </div>
-                `;
-        if (friend.favorite) {
-          $('.bettermdl-friends .contributor-list').prepend(friendHtml);
-        } else {
-          $('.bettermdl-friends .contributor-list').append(friendHtml);
-        }
-
-        // Favorite friend functionality
-        if (friend.favorite) {
-          $('.contributor[data-username="' + friend.username + '"] .favorite i')
-            .removeClass('far')
-            .addClass('fas');
-        } else {
-          $('.contributor[data-username="' + friend.username + '"] .favorite i')
-            .removeClass('fas')
-            .addClass('far');
-        }
-      }
-
-      // Check if this is the last friend in the loop and update the page
-      if (friendData.length === friendsData.length) {
-        console.log(logPrefix, logStyle, 'Friend data with title info:', friendData);
-        if (friendData.length === 0) {
-          $('.bettermdl-friends .loading').text(
-            'No friends have this title on their list. Time to makes new ones!'
-          );
-        } else {
-          $('.bettermdl-friends .loading').remove();
-        }
-      }
-
-      const scoresAverage = calculateAverageScore(scores);
-      updateFriendsScoreHtml(scoresAverage);
-    });
+    await Promise.all(promises);
   }
 }
 

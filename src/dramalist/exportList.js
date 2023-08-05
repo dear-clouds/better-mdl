@@ -22,6 +22,11 @@ const tableIds = {
 function extractData() {
     let data = [];
     document.querySelectorAll('tbody[id^="content_"] tr').forEach(item => {
+        // Check if table is empty
+        if (item.querySelector('.mdl-style-col-empty')) {
+            return;
+        }
+
         let id = item.id.replace('ml', '');
         let titleElement = item.querySelector('.title');
         let title = titleElement ? titleElement.querySelector('span').textContent.trim() : '';
