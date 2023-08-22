@@ -58,22 +58,29 @@ async function checkUserList(titleId) {
 
   $('.title-contributors.box').before(friendListHtml);
 
-  $('.bettermdl-friends .contributor-list').on('click', '.favorite', function () {
+  $('.bettermdl-friends .contributor-list').on('click', '.favorite', function (e) {
+    const selectedFriendUsername = String($(this).parent().data('username'));
     const selectedFriend = friendsWithFavorites.find(
-      (friend) => friend.username === $(this).parent().data('username')
+      (friend) => String(friend.username) === selectedFriendUsername
     );
-    selectedFriend.favorite = !selectedFriend.favorite;
 
-    const updatedFavorites = friendsWithFavorites
-      .filter((friend) => friend.favorite)
-      .map((friend) => friend.username);
-    localStorage.setItem('betterMDLFavFriends', JSON.stringify(updatedFavorites));
+    // Ensure that selectedFriend is defined before trying to modify its properties
+    if (selectedFriend) {
+      selectedFriend.favorite = !selectedFriend.favorite;
 
-    const $heartIcon = $(this).find('i');
-    if (selectedFriend.favorite) {
-      $heartIcon.removeClass('far').addClass('fas');
+      const updatedFavorites = friendsWithFavorites
+        .filter((friend) => friend.favorite)
+        .map((friend) => friend.username);
+      localStorage.setItem('betterMDLFavFriends', JSON.stringify(updatedFavorites));
+
+      const $heartIcon = $(this).find('i');
+      if (selectedFriend.favorite) {
+        $heartIcon.removeClass('far').addClass('fas');
+      } else {
+        $heartIcon.removeClass('fas').addClass('far');
+      }
     } else {
-      $heartIcon.removeClass('fas').addClass('far');
+      console.error('No friend found with username:', selectedFriendUsername);
     }
   });
 
@@ -99,6 +106,7 @@ async function checkUserList(titleId) {
             const avatar = friend.avatar_url;
             let status = 'not on list';
             let score = 'N/A';
+            let progress = '';
             let isTitleOnList = false;
 
             for (let [key, value] of Object.entries(tableIds)) {
@@ -109,6 +117,11 @@ async function checkUserList(titleId) {
                 const row = link && link.closest('tr');
                 const scoreElement = row && row.querySelector('.score');
                 score = scoreElement ? scoreElement.textContent : 'N/A';
+
+                const progressElement = row && row.querySelector('.mdl-style-col-progress');
+                const episodeSeen = progressElement ? progressElement.querySelector('.episode-seen').textContent : null;
+                const episodeTotal = progressElement ? progressElement.querySelector('.episode-total').textContent : null;
+                progress = episodeSeen && episodeTotal ? `(${episodeSeen}/${episodeTotal})` : '';  // <-- Adjust this line
 
                 if (score !== 'N/A' && score !== '0.0') {
                   scores.push(parseFloat(score));
@@ -129,7 +142,7 @@ async function checkUserList(titleId) {
                         </a>
                         <div class="details">
                         <div><a class="text-primary" href="${profileUrl}"><b>${profileName}</b></a></div>
-                        <div class="author-status">${status}</div>
+                        <div class="author-status">${status} ${progress}</div>
                         <div class="author-score"><i class="fas fa-star"></i> ${score}</div>
                         </div>
                         <div class="favorite" title="Make favorite"><i class="${friend.favorite ? 'fas' : 'far'} fa-heart" style="color: var(--mdl-red);"></i></div>
