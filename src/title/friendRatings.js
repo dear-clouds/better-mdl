@@ -221,8 +221,8 @@ function updateFriendsScoreHtml(averageScore) {
 
 function main() {
   // Get title ID from URL
-  const titleId = window.location.pathname.split('-')[0].split('/').pop();
-  // console.log('Title ID:', titleId);
+  const titleId = window.location.pathname.split('/').pop();
+  console.log('Title ID:', titleId);
   if (!titleId) {
     console.log(logPrefix, logStyle, 'Error: No title ID found in URL');
     return;
