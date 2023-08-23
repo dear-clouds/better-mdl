@@ -361,32 +361,54 @@ $('table.film-list').each(function () {
             });
 
             const baseUrl = 'https://mydramalist.com/v1/users/data';
-            const params = new URLSearchParams({
-                token: token,
-                lang: 'en-US',
-                mylist: movieIds.join('-'),
-                t: 'z'
-            });
-            const apiUrl = `${baseUrl}?${params.toString()}`;
 
-            $.getJSON(apiUrl, function (json) {
-                const hiddenMovieIds = json.mylist
-                    .filter(movie => movie.status === 2)
-                    .map(movie => movie.rid);
+            function fetchHiddenMovieIds(ids) {
+                const params = new URLSearchParams({
+                    token: token,
+                    lang: 'en-US',
+                    mylist: ids.join('-'),
+                    t: 'z'
+                });
+                const apiUrl = `${baseUrl}?${params.toString()}`;
 
-                // Update the visibility of rows based on hiddenMovieIds
+                return $.getJSON(apiUrl).then(function (json) {
+                    return json.mylist
+                        .filter(movie => movie.status === 2)
+                        .map(movie => movie.rid);
+                });
+            }
+
+            async function processChunksInBatches(chunks) {
+                let allHiddenMovieIds = [];
+
+                for (let i = 0; i < chunks.length; i += 2) {
+                    const batch = chunks.slice(i, i + 2);  // Taking two chunks at a time
+                    const results = await Promise.all(batch.map(chunk => fetchHiddenMovieIds(chunk)));
+                    results.forEach(hiddenMovieIds => allHiddenMovieIds = allHiddenMovieIds.concat(hiddenMovieIds));
+                }
+
+                // Update the visibility of rows based on allHiddenMovieIds
                 $table.find('tbody > tr, tbody > div').each(function () {
                     const $row = $(this);
                     const classes = $row.attr('class').split(' ');
                     const rid = classes.find(x => x.startsWith('mdl-')).substr(4);
 
-                    if (hiddenMovieIds.includes(Number(rid))) {
+                    if (allHiddenMovieIds.includes(Number(rid))) {
                         $row.hide();
                     } else {
                         $row.show();
                     }
                 });
-            });
+            }
+
+            // Split movieIds into chunks of 40
+            const chunks = [];
+            for (let i = 0; i < movieIds.length; i += 40) {
+                chunks.push(movieIds.slice(i, i + 40));
+            }
+
+            processChunksInBatches(chunks);
+
         }
 
         $icon.toggleClass('fa-eye-slash fa-eye');
