@@ -228,24 +228,43 @@ $('table.film-list').each(function () {
             });
 
             const baseUrl = 'https://mydramalist.com/v1/users/data';
-            const params = new URLSearchParams({
-                token: token,
-                lang: 'en-US',
-                mylist: movieIds.join('-'),
-                t: 'z'
-            });
-            const apiUrl = `${baseUrl}?${params.toString()}`;
 
-            $.getJSON(apiUrl, function (json) {
-                json.mylist.forEach(function (movie) {
-                    if (movie && movie.status >= 1 && movie.status <= 6) {
-                        const $button = $(`.mdl-${movie.rid} .card-footer-btn`);
-                        $button.css('background-color', colours[movie.status]);
-                        $button.find('.movie-status').text(statusNames[movie.status]).css('color', 'var(--mdl-background)');
-                        $button.find('i').removeClass().addClass(icons[movie.status]).css('color', 'var(--mdl-background)');
-                    }
+            function fetchMovieData(ids) {
+                const params = new URLSearchParams({
+                    token: token,
+                    lang: 'en-US',
+                    mylist: ids.join('-'),
+                    t: 'z'
                 });
-            });
+                const apiUrl = `${baseUrl}?${params.toString()}`;
+
+                return $.getJSON(apiUrl).then(function (json) {
+                    json.mylist.forEach(function (movie) {
+                        if (movie && movie.status >= 1 && movie.status <= 6) {
+                            const $button = $(`.mdl-${movie.rid} .card-footer-btn`);
+                            $button.css('background-color', colours[movie.status]);
+                            $button.find('.movie-status').text(statusNames[movie.status]).css('color', 'var(--mdl-background)');
+                            $button.find('i').removeClass().addClass(icons[movie.status]).css('color', 'var(--mdl-background)');
+                        }
+                    });
+                });
+            }
+
+            async function processChunksInBatches(chunks) {
+                for (let i = 0; i < chunks.length; i += 2) {
+                    const batch = chunks.slice(i, i + 2);  // Taking two chunks at a time
+                    await Promise.all(batch.map(chunk => fetchMovieData(chunk)));
+                }
+            }
+
+            // Split movieIds into chunks of 40
+            const chunks = [];
+            for (let i = 0; i < movieIds.length; i += 40) {
+                chunks.push(movieIds.slice(i, i + 40));
+            }
+
+            processChunksInBatches(chunks);
+
 
             $viewModeBtn.find('i').removeClass('fa-th').addClass('fa-list');
 
@@ -267,33 +286,51 @@ $('table.film-list').each(function () {
             const movieIds = [];
 
             // Reapply the status icons before the title
-            $table.find('tbody tr[class]').each(function () {
+            $('table.film-list tbody tr[class]').each(function (index) {
                 const classes = $(this).attr('class').split(' ');
-                const rid = classes.find(x => x.startsWith('mdl-')).substr(4);
-
+                const rid = classes.find((x) => x.startsWith('mdl-')).substr(4);
                 movieIds.push(rid);
             });
 
             const baseUrl = 'https://mydramalist.com/v1/users/data';
-            const params = new URLSearchParams({
-                token: token,
-                lang: 'en-US',
-                mylist: movieIds.join('-'),
-                t: 'z'
-            });
-            const apiUrl = `${baseUrl}?${params.toString()}`;
 
-            $.getJSON(apiUrl, function (json) {
-                // Iterate over each movie object in the response
-                json.mylist.forEach(function (movie) {
-                    if (movie.status >= 1 && movie.status <= 6) {
-                        const row = $('table.film-list tbody tr.mdl-' + movie.rid);
-                        const titleLink = row.find('.title a');
-                        titleLink.prepend(
-                            `<i class="${icons[movie.status]}" style="color: ${colours[movie.status]};"></i> `
-                        );
-                    }
+            function fetchMovieStatus(ids) {
+                const params = new URLSearchParams({
+                    token: token,
+                    lang: 'en-US',
+                    mylist: ids.join('-'),
+                    t: 'z'
                 });
+                const apiUrl = `${baseUrl}?${params.toString()}`;
+
+                return $.getJSON(apiUrl).then(function (json) {
+                    json.mylist.forEach(function (movie) {
+                        if (movie.status >= 1 && movie.status <= 6) {
+                            const row = $('table.film-list tbody tr.mdl-' + movie.rid);
+                            const titleLink = row.find('.title a');
+                            titleLink.prepend(
+                                `<i class="${icons[movie.status]}" style="color: ${colours[movie.status]};"></i> `
+                            );
+                        }
+                    });
+                });
+            }
+
+            async function processChunksInBatches(chunks) {
+                for (let i = 0; i < chunks.length; i += 2) {
+                    const batch = chunks.slice(i, i + 2);  // Taking two chunks at a time
+                    await Promise.all(batch.map(chunk => fetchMovieStatus(chunk)));
+                }
+            }
+
+            // Split movieIds into chunks of 40
+            const chunks = [];
+            for (let i = 0; i < movieIds.length; i += 40) {
+                chunks.push(movieIds.slice(i, i + 40));
+            }
+
+            processChunksInBatches(chunks).then(() => {
+                console.log("All movie statuses updated.");
             });
         }
 
@@ -511,30 +548,49 @@ $(document).ready(function () {
 const movieIds = [];
 $('table.film-list tbody tr[class]').each(function (index) {
     const classes = $(this).attr('class').split(' ');
-    // Find the class that starts with 'mdl-' and extract the ID
     const rid = classes.find((x) => x.startsWith('mdl-')).substr(4);
     movieIds.push(rid);
 });
 
 const baseUrl = 'https://mydramalist.com/v1/users/data';
-const params = new URLSearchParams({
-    token: token,
-    lang: 'en-US',
-    mylist: movieIds.join('-'),
-    t: 'z'
-});
-const apiUrl = `${baseUrl}?${params.toString()}`;
 
-$.getJSON(apiUrl, function (json) {
-    // Iterate over each movie object in the response
-    json.mylist.forEach(function (movie) {
-        if (movie.status >= 1 && movie.status <= 6) {
-            const row = $('table.film-list tbody tr.mdl-' + movie.rid);
-            const titleLink = row.find('.title a');
-            titleLink.prepend(
-                `<i class="${icons[movie.status]}" style="color: ${colours[movie.status]};"></i> `
-            );
-        }
+function fetchMovieStatus(ids) {
+    const params = new URLSearchParams({
+        token: token,
+        lang: 'en-US',
+        mylist: ids.join('-'),
+        t: 'z'
     });
+    const apiUrl = `${baseUrl}?${params.toString()}`;
+
+    return $.getJSON(apiUrl).then(function (json) {
+        json.mylist.forEach(function (movie) {
+            if (movie.status >= 1 && movie.status <= 6) {
+                const row = $('table.film-list tbody tr.mdl-' + movie.rid);
+                const titleLink = row.find('.title a');
+                titleLink.prepend(
+                    `<i class="${icons[movie.status]}" style="color: ${colours[movie.status]};"></i> `
+                );
+            }
+        });
+    });
+}
+
+async function processChunksInBatches(chunks) {
+    for (let i = 0; i < chunks.length; i += 2) {
+        const batch = chunks.slice(i, i + 2);  // Taking two chunks at a time
+        await Promise.all(batch.map(chunk => fetchMovieStatus(chunk)));
+    }
+}
+
+// Split movieIds into chunks of 40
+const chunks = [];
+for (let i = 0; i < movieIds.length; i += 40) {
+    chunks.push(movieIds.slice(i, i + 40));
+}
+
+processChunksInBatches(chunks).then(() => {
+    console.log("All movie statuses updated.");
 });
+
 
