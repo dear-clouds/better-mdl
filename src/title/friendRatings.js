@@ -37,7 +37,7 @@ async function checkUserList(titleId) {
     <div class="bettermdl-friends box clear hidden-sm-down">
     <div class="box-header primary"><h3>Friends</h3></div>
     <div class="box-body light-b contributor-list">
-    <div class="loading">No friends have this title on their list. Time to makes new ones!</div>
+    <div class="loading">No friend have this title on their list. Time to makes new ones!</div>
     </div>
     </div>
     `;
@@ -121,7 +121,7 @@ async function checkUserList(titleId) {
                 const progressElement = row && row.querySelector('.mdl-style-col-progress');
                 const episodeSeen = progressElement ? progressElement.querySelector('.episode-seen').textContent : null;
                 const episodeTotal = progressElement ? progressElement.querySelector('.episode-total').textContent : null;
-                progress = episodeSeen && episodeTotal ? `(${episodeSeen}/${episodeTotal})` : '';  // <-- Adjust this line
+                progress = episodeSeen && episodeTotal ? `(${episodeSeen}/${episodeTotal})` : '';
 
                 if (score !== 'N/A' && score !== '0.0') {
                   scores.push(parseFloat(score));
@@ -222,7 +222,7 @@ function updateFriendsScoreHtml(averageScore) {
 function main() {
   // Get title ID from URL
   const titleId = window.location.pathname.split('/').pop();
-  console.log('Title ID:', titleId);
+  console.log(logPrefix, logStyle, 'Title ID:', titleId);
   if (!titleId) {
     console.log(logPrefix, logStyle, 'Error: No title ID found in URL');
     return;

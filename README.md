@@ -9,7 +9,7 @@
 
 Better MDL is a project i'm working on to enhance the website. I've been using MDL since the very beginning and it hasn't improved that much over the years. So here I am, trying to make the website more friendly and modern!
 
-If you have suggestions, feel free to post them on [this post](https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks), just keep in mind that there's a limitation to what I can do on with a userscript.
+If you have suggestions, feel free to post them on [this post](https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks), just keep in mind that there's a limitation to what I can do with a userscript.
 
 _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clouds/mydramalist) and must be installed separately._
 
@@ -17,7 +17,7 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 
 1. Install <a href="https://www.tampermonkey.net/" target="_blank">Tampermonkey</a> for your browser (or your preferred Userscripts Manager)
 
-2. Install my userscript by clicking [here](https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js) and click "Install". This may take some time to load.
+2. Install my userscript by clicking [here](https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js) or via [GreasyFork](https://greasyfork.org/en/scripts/481510-better-mdl)
 
 3. Go to <a href="https://mydramalist.com/account/profile" target="_blank">MyDramaList settings page</a> to customize the script, just like you would to edit your profile (_You need to scroll down to the end of the page to see the `Better MDL Settings` section_)
 
@@ -65,15 +65,14 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 
 #### Everywhere
 - Back to Top button
-- Hide comments with defined terms
-- Option to hide the default MDL stats on profile
-- Autofill Start Date for "Currently Watching" titles after watching 1 episode
+- Hide comments with specified terms
+- Autofill Start Date for "Currently Watching" titles after 1 episode (only in pop-up)
 
 #### Profile
-- Titles by Country
+- Titles by Country Chart with option to hide default MDL stats
 - Option to hide share icons on drama & people
 - Bookmark lists & see saved lists on profile
-- Pin favorite titles on profile via a list (*suggested by [KC Drama LOVER](https://mydramalist.com/profile/KCDramaLOVER)*)
+- Pin your favorite titles on your profile via a list (*suggested by [KC Drama LOVER](https://mydramalist.com/profile/KCDramaLOVER)*)
 - Import/See your comments made on drama/people/list  (*suggested by [Soju](https://mydramalist.com/profile/PearlMilkChaii)*)
 - Option to force list link on Profile to direct to "Currently Watching" tab
 
@@ -82,13 +81,13 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 - Ratings from IMDB/Rotten Tomatoes/Metacritic
 - Link to Anilist for Adaptations
 - Add a heart to your liked people
-- Friend ratings & ability to put your favs at the top (_suggested by sailingmars_)
+- See friend ratings and prioritize favorites (_suggested by sailingmars_)
 - Average friends score (*suggested by [Saarthak](https://mydramalist.com/profile/Srthk)*)
 
 #### People pages
 - 3 Layout Views (Original, Thumbnails & Posters)
 - Status icons
-- Show the total for each status on your list
+- Get a total count for each status on your list
 - Sorting & Ordering options
 - Hide completed titles
 - Collapse the sections
@@ -121,7 +120,15 @@ _The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clou
 | Hide cancelled titles                             |    ✔️    |     N/A     |
 | More stats & achievements                         |    ✔️    |     N/A     |
 
-_This list might no be up-to-date so please check the official <a href="https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks?r=notif&_nid=134641861&page=1" target="__blank">MDL Thread</a>._
+_This list might no be up-to-date so please check the official [MDL Thread](https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks?r=notif&_nid=134641861&page=1)._
+
+## Contributing
+
+Everyone is welcome to contribute!
+1. Fork this repo.
+2. Create a new module in the folder your code works on (`common` is for codes that should be active on all pages).
+3. Check how to run <a href="https://github.com/momocow/webpack-userscript/" target="_blank">Webpack Userscript</a> locally for testing and add your credits at the top of your code, just like I did [here](https://github.com/dear-clouds/better-mdl/blob/main/src/search/filters.js).
+4. Create a pull request. Done!
 
 ## Credits
 

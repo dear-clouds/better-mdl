@@ -32,8 +32,9 @@ module.exports = {
                 namespace: "https://dear-clouds.carrd.co/#better-mdl",
                 version: packageJson.version,
                 author: "Mio.",
+                // licence: "GPL3",
                 match: ["*://www.mydramalist.com/*", "*mydramalist.com/*"],
-                description: "An enhance version making the website more friendly & modern",
+                description: "A userscript to enhance the website by making it more friendly & modern",
                 downloadURL: "https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js",
                 updateURL: "https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.meta.js",
                 supportURL: "https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks",
@@ -45,7 +46,7 @@ module.exports = {
     ],
     devServer: {
         static: {
-            directory: path.join(__dirname, 'dist'),
+            directory: path.join(__dirname, '/'),
         },
         compress: true,
         port: 8080,

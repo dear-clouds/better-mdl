@@ -12,18 +12,18 @@ if (
     window.location.pathname.includes('not_interested')
 ) {
     /* ---------------------------- Sort & View icons --------------------------- */
-
+    
     let viewMode = 'List'; // Default View
     const viewModes = ['List', 'Thumbnail', 'Poster']; // View Modes
-
+    
     const $viewModeBtn = $('<button>').addClass('btn btn-secondary view-mode-btn mx-1').append($('<i>').addClass(getViewModeIcon(viewMode)).attr('title', 'Change View'));
-
+    
     $viewModeBtn.click(function () {
         const currentViewIndex = viewModes.indexOf(viewMode);
         viewMode = viewModes[(currentViewIndex + 1) % viewModes.length];
         $viewModeBtn.find('i').removeClass().addClass(getViewModeIcon(viewMode)); // Update the icon based on the new view mode
     });
-
+    
     // Define the sort dropdown
     const $sortDropdown = $('<div>').addClass('btn-group mx-1');
     const $sortButton = $('<button>').addClass('btn btn-secondary dropdown-toggle').attr('type', 'button').attr('id', 'sort-dropdown').attr('data-toggle', 'dropdown').attr('aria-haspopup', 'true').attr('aria-expanded', 'false').text('Sort by');
@@ -37,21 +37,21 @@ if (
         { label: 'Score', class: '.score', icons: ['fas fa-arrow-up', 'fas fa-arrow-down'] }
     ];
     let currentSortIndex = null;
-
+    
     $.each(sortOptions, function (index, option) {
         const $option = $('<a>').addClass('dropdown-item').attr('href', '#').attr('data-index', index).text(option.label);
         $sortMenu.append($option);
     });
-
+    
     const $orderButton = $('<button>').addClass('btn btn-secondary').attr('type', 'button').append($('<i>').addClass('fas fa-arrow-up sort-icon'));
-
+    
     $sortDropdown.append($sortButton).append($sortMenu).append($orderButton);
-
+    
     $sortMenu.on('click', 'a.dropdown-item', function (e) {
         e.preventDefault();
         const $this = $(this);
         const newIndex = parseInt($this.attr('data-index'));
-
+        
         // If the user selected a new sort option
         if (newIndex !== currentSortIndex) {
             currentSortIndex = newIndex;
@@ -60,48 +60,48 @@ if (
             $orderButton.find('.sort-icon').addClass(sortOptions[newIndex].icons[0]);
         }
     });
-
+    
     // Append the buttons and dropdown to a container div and add it to the nav
     $('.mdl-style-nav-desktop ul').append(
         $('<li>').addClass('mio-filters btn-group')
-            .css('float', 'right')
-            .append($viewModeBtn)
-            .append($sortDropdown)
+        .css('float', 'right')
+        .append($viewModeBtn)
+        .append($sortDropdown)
     );
-
+    
     function getViewModeIcon(viewMode) {
         console.log(logPrefix, logStyle, 'Current view mode:', viewMode);
         switch (viewMode) {
             case 'List':
-                return 'fas fa-list';
+            return 'fas fa-list';
             case 'Thumbnail':
-                return 'fas fa-th';
+            return 'fas fa-th';
             case 'Poster':
-                return 'fas fa-images';
+            return 'fas fa-images';
             default:
-                return '';
+            return '';
         }
     }
-
+    
     /* ---------------------------- Layout Views --------------------------- */
-
+    
     const $container = $('<div>').addClass('poster-view');
     $('table.mdl-style-table').each(function () {
         let $originalTable = $(this);
         const originalTableId = $originalTable.attr('id');
         const $originalHtml = $originalTable.prop('outerHTML');
         const $originalRows = $originalTable.find('tbody tr').clone();
-
+        
         const views = ['List', 'Thumbnail', 'Poster'];
         let currentViewIndex = 0;
-
+        
         $viewModeBtn.on('click', function () {
             currentViewIndex = (currentViewIndex + 1) % views.length;
             const currentView = views[currentViewIndex];
-
+            
             // remove existing icon classes
             $viewModeBtn.find('i').removeClass('fas fa-th fas fa-list-ul fas fa-images');
-
+            
             // add new icon class based on the current view
             if (currentView === 'Thumbnail') {
                 $viewModeBtn.find('i').addClass('fas fa-th');
@@ -110,7 +110,7 @@ if (
             } else {
                 $viewModeBtn.find('i').addClass('fas fa-images');
             }
-
+            
             // toggle the view
             if (currentView === 'List') {
                 $viewModeBtn.find('i').removeClass('fa-th').addClass('fa-th-list');
@@ -122,25 +122,25 @@ if (
                 $originalTable.addClass('thumbnail-view');
                 $originalTable.removeClass('list-view');
                 $viewModeBtn.find('i').removeClass('fa-th-list').addClass('fa-th');
-
+                
                 // Reapply the "Poster" column to the table if it doesn't exist
                 if ($originalTable.find('th:nth-child(2)').text() !== 'Poster') {
                     if (typeof Storage !== 'undefined') {
                         // Get the cached poster URLs from local storage
                         const cachedPosters =
-                            JSON.parse(localStorage.getItem('betterMDLPosters')) || {};
-
+                        JSON.parse(localStorage.getItem('betterMDLPosters')) || {};
+                        
                         // Add posters to the table
                         $originalTable.find('thead th:nth-child(1)').after(
                             '<th class="mdl-style-thead-poster text-center hidden-sm-down" width="80">Poster</th>'
                         );
-
+                        
                         $originalTable.find('tbody tr').each(function (index) {
                             const $tr = $(this);
                             const $titleCell = $tr.find('td:nth-child(2)');
                             const $link = $titleCell.find('a');
                             const movieUrl = $link.attr('href');
-
+                            
                             if (movieUrl) {
                                 // Check if the poster URL is cached
                                 if (cachedPosters[movieUrl]) {
@@ -153,13 +153,13 @@ if (
                                         $.get(movieUrl, function (data) {
                                             const $poster = $(data).find('.film-cover img');
                                             const posterUrl = $poster.attr('src');
-
+                                            
                                             cachedPosters[movieUrl] = posterUrl;
                                             localStorage.setItem(
                                                 'betterMDLPosters',
                                                 JSON.stringify(cachedPosters)
                                             );
-
+                                            
                                             $titleCell.before(
                                                 `<td class="film-cover"><img src="${posterUrl}" style="max-width: 80px;"></td>`
                                             );
@@ -167,24 +167,24 @@ if (
                                             // Image failed to load, try again
                                             setTimeout(() => {
                                                 $.get(movieUrl)
-                                                    .done(function (data) {
-                                                        const $poster = $(data).find('.film-cover img');
-                                                        const posterUrl = $poster.attr('src');
-
-                                                        cachedPosters[movieUrl] = posterUrl;
-                                                        localStorage.setItem(
-                                                            'betterMDLPosters',
-                                                            JSON.stringify(cachedPosters)
-                                                        );
-
-                                                        $titleCell.before(
-                                                            `<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`
-                                                        );
-                                                    })
-                                                    .fail(function () {
-                                                        // Image failed to load again, give up
-                                                        $titleCell.before('<td></td>');
-                                                    });
+                                                .done(function (data) {
+                                                    const $poster = $(data).find('.film-cover img');
+                                                    const posterUrl = $poster.attr('src');
+                                                    
+                                                    cachedPosters[movieUrl] = posterUrl;
+                                                    localStorage.setItem(
+                                                        'betterMDLPosters',
+                                                        JSON.stringify(cachedPosters)
+                                                    );
+                                                    
+                                                    $titleCell.before(
+                                                        `<td class="film-cover"><img src="${posterUrl}" style="max-width: 70px;"></td>`
+                                                    );
+                                                })
+                                                .fail(function () {
+                                                    // Image failed to load again, give up
+                                                    $titleCell.before('<td></td>');
+                                                });
                                             }, index * 125); // Delay requests by 125 milliseconds (8 requests per second)
                                         });
                                     }, index * 125); // Delay requests by 125 milliseconds (8 requests per second)
@@ -193,7 +193,7 @@ if (
                                 $titleCell.before('<td></td>');
                             }
                         });
-
+                        
                     } else {
                         // Local storage is not available
                         $originalTable.find('th:nth-child(1)').after('<th>Poster</th>');
@@ -207,9 +207,9 @@ if (
             } else if (currentView === 'Poster') {
                 $originalTable.hide();
                 $container.empty();
-
+                
                 const movieNotes = {};
-
+                
                 $originalTable.find('tbody tr').each(function (index) {
                     const $tr = $(this);
                     const $titleCell = $tr.find('td.mdl-style-col-title');
@@ -228,82 +228,101 @@ if (
                     const movieId = $tr.attr('id').substr(2);
                     const idNumber = movieId.replace('mdl-', '');
                     const hasAiring = $tr.find('.mdl-style-col-title .airing').length > 0;
-                    let episodeProgress = $episodeSeen.text() + '/' + $episodeTotal.text();
-
+                    const isPlanToWatch = window.location.pathname.includes('plan_to_watch');
+                    
+                    let episodeCountText;
+                    
+                    if (isPlanToWatch) {
+                        // Extract the total episodes from the "Episode" column
+                        episodeCountText = $tr.find('.mdl-style-col-eps').text().trim();
+                    } else {
+                        // For other categories, get from the "Progress" colum
+                        let episodeSeenText = $episodeSeen.text().trim() || '0';
+                        let episodeTotalText = $episodeTotal.text().trim();
+                        
+                        if (!episodeTotalText) {
+                            episodeTotalText = '?';
+                        }
+                        
+                        episodeCountText = `${episodeSeenText}/${episodeTotalText}`;
+                    }
+                    
+                    
                     const $poster = $('<div>')
-                        .addClass('col-md-2 mdl-' + movieId)
+                    .addClass('col-md-2 mdl-' + movieId)
+                    .append(
+                        $('<div>')
+                        .addClass('card h-100 film-cover text-center')
                         .append(
-                            $('<div>')
-                                .addClass('card h-100 film-cover text-center')
+                            $('<a>').attr('href', movieUrl).append(
+                                $('<div>')
+                                .addClass('image-container')
                                 .append(
-                                    $('<a>').attr('href', movieUrl).append(
-                                        $('<div>')
-                                            .addClass('image-container')
-                                            .append(
-                                                $('<img>')
-                                                    .addClass('card-img-top img-fluid')
-                                                    .attr('src', imgSrc)
-                                                    .attr('alt', 'Movie poster'),
-                                                $('<span>')
-                                                    .addClass('label label-right label-secondary mdl-style-col-country')
-                                                    .text(country),
-                                                $('<span>')
-                                                    .addClass('label label-left label-primary mdl-style-col-year' + (hasAiring ? ' airing-label' : ''))
-                                                    .text(hasAiring ? 'Airing' : year),
-                                                $('<span>').addClass('label-rating').html($rating),
-                                                $('<span>').addClass('label-ratingNum score').html($ratingNum),
-                                                $('<span>').addClass('mdl-style-col-type').html(type),
-                                                $('<span>').addClass('title').text(title)
-                                            )
-                                    ),
-                                    $('<div>')
-                                        .addClass('card-body')
-                                        .append(
-                                            $('<p>')
-                                                .addClass('card-title mb-0 title')
-                                                .html(`<a href="${movieUrl}">${$tr.find('.title').text()}</a>`)
-                                        ),
-                                    $('<div>')
-                                        .addClass('card-footer')
-                                        .append(
-                                            $('<button>')
-                                                .addClass('card-footer-btn btn-manage-list w-100 font-weight-bold')
-                                                .attr('data-id', movieId)
-                                                .attr('data-stats', 'mylist:' + movieId)
-                                                .css({
-                                                    background: 'var(--mdl-primary)',
-                                                    color: 'var(--mdl-background)',
-                                                })
-                                                .append(
-                                                    $('<span>').append(
-                                                        $('<i>').addClass('fas fa-edit'),
-                                                        '&nbsp;',
-                                                        $('<span>').addClass('mdl-style-col-progress').text(episodeProgress)
-                                                    )
-                                                )
-                                        )
+                                    $('<img>')
+                                    .addClass('card-img-top img-fluid')
+                                    .attr('src', imgSrc)
+                                    .attr('alt', 'Movie poster'),
+                                    $('<span>')
+                                    .addClass('label label-right label-secondary mdl-style-col-country')
+                                    .text(country),
+                                    $('<span>')
+                                    .addClass('label label-left label-primary mdl-style-col-year' + (hasAiring ? ' airing-label' : ''))
+                                    .text(hasAiring ? 'Airing' : year),
+                                    $('<span>').addClass('label-rating').html($rating),
+                                    $('<span>').addClass('label-ratingNum score').html($ratingNum),
+                                    $('<span>').addClass('mdl-style-col-type').html(type),
+                                    $('<span>').addClass('title').text(title)
                                 )
-                        );
-
+                            ),
+                            $('<div>')
+                            .addClass('card-body')
+                            .append(
+                                $('<p>')
+                                .addClass('card-title mb-0 title')
+                                .html(`<a href="${movieUrl}">${$tr.find('.title').text()}</a>`)
+                            ),
+                            $('<div>')
+                            .addClass('card-footer')
+                            .append(
+                                $('<button>')
+                                .addClass('card-footer-btn btn-manage-list w-100 font-weight-bold')
+                                .attr('data-id', movieId)
+                                .attr('data-stats', 'mylist:' + movieId)
+                                .css({
+                                    background: 'var(--mdl-primary)',
+                                    color: 'var(--mdl-background)',
+                                })
+                                .append(
+                                    $('<span>').append(
+                                        $('<i>').addClass('fas fa-edit'),
+                                        '&nbsp;',
+                                        $('<span>').addClass('mdl-style-col-progress').text(episodeCountText)
+                                    )
+                                )
+                            )
+                        )
+                    );
+                    
+                    
                     if (hasAiring) {
                         $poster.find('.mdl-style-col-year').text('Airing').css('background-color', 'var(--mdl-tag-vip)');
                     }
-
+                    
                     $container.append($poster);
-
+                    
                     // Check if notes exist in the cache
                     const cachedNotes = movieNotes[movieId];
                     if (cachedNotes) {
                         const $hoverContent = $('<div>').addClass('mio-notes').text(cachedNotes);
                         $poster.prepend($hoverContent);
                     }
-
+                    
                     // Fetch movie notes if not in cache
                     $poster.on({
                         mouseenter: function () {
                             const $currentPoster = $(this);
                             clearTimeout($currentPoster.data('timeout'));
-
+                            
                             if (!$currentPoster.data('notesFetched')) {
                                 // Assign the AJAX request to the jQuery data
                                 $currentPoster.data('ajaxRequest', $.ajax({
@@ -315,27 +334,27 @@ if (
                                     success: function (response) {
                                         const notes = response.data.note;
                                         movieNotes[movieId] = notes; // Save the notes in the cache
-
+                                        
                                         // Display the notes in a div
                                         const $notesDisplay = $('<div>').addClass('mio-notes').text(notes);
                                         $currentPoster.prepend($notesDisplay);
                                         $currentPoster.data('notesFetched', true);
-
+                                        
                                         const $editIcon = $('<i>').addClass('fas fa-pen mio-edit-icon').appendTo($notesDisplay);
-
+                                        
                                         // Attach a click event to the edit icon
                                         $editIcon.on('click', function () {
                                             // Change the div into a textarea
                                             const $textarea = $('<textarea>').addClass('mio-notes').val(notes);
                                             $notesDisplay.replaceWith($textarea);
                                             $textarea.focus();
-
+                                            
                                             // Attach a keypress event to the textarea
                                             $textarea.on('keypress', function (event) {
                                                 if (event.which == 13) { // Enter key
                                                     event.preventDefault();
                                                     const updatedNotes = $(this).val();
-
+                                                    
                                                     // Make a PATCH request to update the notes
                                                     $.ajax({
                                                         url: `https://mydramalist.com/v1/users/watchaction/${idNumber}?lang=en-US`,
@@ -347,10 +366,10 @@ if (
                                                         data: { note: updatedNotes },
                                                         success: function () {
                                                             movieNotes[movieId] = updatedNotes;
-
+                                                            
                                                             const $updatedNotesDisplay = $('<div>').addClass('mio-notes').text(updatedNotes);
                                                             $textarea.replaceWith($updatedNotesDisplay);
-
+                                                            
                                                             $updatedNotesDisplay.on({
                                                                 mouseenter: function () {
                                                                     $editIcon.show();
@@ -367,7 +386,7 @@ if (
                                                 }
                                             });
                                         });
-
+                                        
                                         // Show the edit icon on hover over the notes
                                         $notesDisplay.on({
                                             mouseenter: function () {
@@ -404,24 +423,24 @@ if (
                             }, 200));
                         }
                     });
-
+                    
                 });
-
+                
                 $originalTable.hide();
                 $container.show();
                 $container.append('<div style="clear:both;"></div>');
-
+                
             }
-
+            
             // Append the $container after the loop
             $originalTable.after($container);
         });
-
-
+        
+        
         /* ---------------------------- Sort by Dropdown ---------------------------- */
-
+        
         let currentSortOption = 1;
-
+        
         // Sort the table or poster view based on the current sort option
         function sortView(ascending) {
             const $sortIcon = $orderButton.find('.sort-icon');
@@ -440,7 +459,7 @@ if (
                     }
                     return ascending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
                 });
-
+                
                 $posterCardsContainer.detach().appendTo($posterView);
             } else {
                 $rows = $originalTable.find('tbody tr');
@@ -455,19 +474,19 @@ if (
                 });
                 $originalTable.find('tbody').empty().append($rows);
             }
-
+            
             // Toggle the sort icon based on the current sort option and sort direction
             $sortIcon.removeClass(option.icons[ascending ? 1 : 0])
-                .addClass(option.icons[ascending ? 0 : 1]);
+            .addClass(option.icons[ascending ? 0 : 1]);
         }
-
+        
         // Sort the view when the order button is clicked
         $orderButton.on('click', function () {
             const $sortIcon = $(this).find('.sort-icon');
             const ascending = $sortIcon.hasClass(sortOptions[currentSortOption].icons[0]);
             sortView(!ascending);
         });
-
+        
         // Sort the view when a sort option is clicked
         $sortMenu.on('click', 'a.dropdown-item', function (e) {
             e.preventDefault();
@@ -476,14 +495,14 @@ if (
             currentSortOption = index;
             sortView(false);
         });
-
+        
         // Initialize the sort icon based on the default sort option
         $orderButton.find('.sort-icon').addClass(sortOptions[currentSortOption].icons[1]);
-
-
-
-
-
+        
+        
+        
+        
+        
         /* --------------------------- End of Tables --------------------------- */
     });
 }

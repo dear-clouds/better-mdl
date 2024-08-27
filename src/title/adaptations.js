@@ -7,10 +7,11 @@ const adaptedFromMangaTag = document.querySelector('a[href*="th=127&"]');
 const adaptedFromWebtoonTag = document.querySelector('a[href*="th=122&"]');
 const adaptedFromManhwaTag = document.querySelector('a[href*="th=752&"]');
 const adaptedFromManhuaTag = document.querySelector('a[href*="th=935&"]');
+const adaptedFromWebcomicTag = document.querySelector('a[href*="th=3767&"]');
 const adaptedFromAnimeTag = document.querySelector('a[href*="th=2853&"]');
 const adaptedFromVideoGameTag = document.querySelector('a[href*="th=88&"]');
 
-if (adaptedFromMangaTag || adaptedFromWebtoonTag || adaptedFromManhuaTag || adaptedFromManhwaTag) {
+if (adaptedFromMangaTag || adaptedFromWebtoonTag || adaptedFromManhuaTag || adaptedFromWebcomicTag || adaptedFromManhwaTag) {
     const anilistResultDiv = document.createElement('div');
     anilistResultDiv.classList.add('box', 'clear', 'hidden-sm-down', 'mio-manga-box');
 

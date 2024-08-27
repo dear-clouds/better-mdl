@@ -4,7 +4,9 @@ import { logPrefix, logStyle, errorStyle } from "../index.js";
 // Get the native title value
 const nativeTitleLink = document.querySelector('b.inline + a');
 const nativeTitleValue = nativeTitleLink.textContent.trim();
-const year = $('.film-title').text().split('(')[1].slice(0, -1);
+const titleText = $('.film-title').text();
+const splitResult = titleText.split('(');
+const year = (splitResult.length > 1) ? splitResult[1].slice(0, -1) : '';
 
 // Get the h1.film-title a value
 const filmTitleLink = document.querySelector('h1.film-title a');

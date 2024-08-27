@@ -7,6 +7,8 @@ console.log(`%c
 ██████  █████      ██       ██    █████   ██████      ██ ████ ██ ██   ██ ██      
 ██   ██ ██         ██       ██    ██      ██   ██     ██  ██  ██ ██   ██ ██      
 ██████  ███████    ██       ██    ███████ ██   ██     ██      ██ ██████  ███████ 
+
+Script made by Mio. (https://github.com/dear-clouds/better-mdl)
                                                                                                                                            
 `, 'color: #846D62; text-shadow: 0px 4px 1px #A8A29C;');
 
