@@ -3,12 +3,12 @@ import { colours } from '../index.js';
 import { icons } from '../index.js';
 
 const movieCount = {
-  1: 0,
-  2: 0,
-  3: 0,
-  4: 0,
-  5: 0,
-  6: 0,
+  1: 0, // currently watching
+  2: 0, // completed
+  3: 0, // plan to watch
+  4: 0, // on hold
+  5: 0, // dropped
+  6: 0, // not interested
 };
 
 const movieIds = [];

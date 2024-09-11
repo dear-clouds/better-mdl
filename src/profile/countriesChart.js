@@ -1,4 +1,5 @@
 import { colours } from '../index.js';
+import { logPrefix, logStyle } from "../index.js";
 
 /* ---------------------- Force rows to be same height ---------------------- */
 if (localStorage.getItem('betterMDLhidedefaultStats') === 'true') {
@@ -14,7 +15,7 @@ if (localStorage.getItem('betterMDLhidedefaultStats') === 'true') {
 /* ---------------------------- Titles by Country --------------------------- */
 // Find the username from the profile page URL
 const ProfileUsername = window.location.pathname.split('/').pop();
-// console.log('Username:', ProfileUsername);
+console.log(logPrefix, logStyle, 'Username:', ProfileUsername);
 
 // Load the D3.js library from a CDN
 const d3Script = document.createElement('script');
@@ -41,7 +42,7 @@ d3Script.onload = function () {
                 }
             });
 
-            // console.log('Country counts:', countryCounts);
+            console.log(logPrefix, logStyle, 'Country counts:', countryCounts);
 
             const statsContainer = $('<div class="bettermdl-stats"></div>');
             $('div#chart-legend').before(statsContainer);

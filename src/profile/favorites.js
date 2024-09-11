@@ -12,7 +12,7 @@ fetch(listsUrl)
     const listLink = Array.from(doc.querySelectorAll(".col-sm-5.col-lg-6.col-md-6 .title-primary"))
       .find(link => link.textContent === listTitle)
       ?.getAttribute("href");
-    console.log(logPrefix, logStyle, `Found link for list: ${listLink}`);
+    // console.log(logPrefix, logStyle, `Found link for list: ${listLink}`);
     if (listLink) {
       fetch(`https://mydramalist.com${listLink}`)
         .then(response => response.text())

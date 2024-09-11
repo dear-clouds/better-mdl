@@ -300,11 +300,13 @@ export async function getAllComments(token, pageId, type) {
 /*                                  Profiles                                  */
 /* -------------------------------------------------------------------------- */
 
-const profileUrlPattern = /^https:\/\/mydramalist\.com\/profile\/\w+$/;
+const profileUrlPattern = /^https:\/\/mydramalist\.com\/profile\/[\w.-]+$/;
+
 if (profileUrlPattern.test(window.location.href)) {
-
     importAll(require.context('./profile/', true, /\.js$/), /\.js$/);
-
+    console.log(logPrefix, logStyle, 'Profile URL matched successfully.');
+} else {
+    console.warn(logPrefix, logStyle, 'Profile URL did not match the expected pattern.');
 }
 
 /* -------------------------------------------------------------------------- */

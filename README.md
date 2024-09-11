@@ -11,7 +11,8 @@ Better MDL is a project i'm working on to enhance the website. I've been using M
 
 If you have suggestions, feel free to post them on [this post](https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks), just keep in mind that there's a limitation to what I can do with a userscript.
 
-_The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clouds/mydramalist) and must be installed separately._
+> [!NOTE]
+> The themes I use in my screenshots is [Catppuccin](https://github.com/dear-clouds/mydramalist) and must be installed separately.
 
 ## Installation
 
