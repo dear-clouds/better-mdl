@@ -104,12 +104,12 @@ If you have suggestions, feel free to post them on [this post](https://mydramali
 ### Screenshots
 
 <p align="center">
-<img src="https://dear-clouds.carrd.co/assets/images/gallery22/ebcc1fb5_original.jpg?v=21bef0a8" width="48%">
-<img src="https://dear-clouds.carrd.co/assets/images/gallery22/1863a508_original.jpg" width="48%">
-<img src="https://dear-clouds.carrd.co/assets/images/gallery22/0d9c43c7_original.jpg?v=e8880db8" width="48%">
-<img src="https://i.imgur.com/3TxCK0i.png" width="48%"> 
-<img src="https://i.imgur.com/YbSvrTI.png" width="48%"> 
-<img src="https://i.imgur.com/VCeEe88.png" width="48%">
+<img src="https://dear-clouds.carrd.co/assets/images/gallery22/ebcc1fb5_original.jpg?v=21bef0a8" width="46%">
+<img src="https://dear-clouds.carrd.co/assets/images/gallery22/1863a508_original.jpg" width="46%">
+<img src="https://dear-clouds.carrd.co/assets/images/gallery22/0d9c43c7_original.jpg?v=e8880db8" width="46%">
+<img src="https://i.imgur.com/3TxCK0i.png" width="46%"> 
+<img src="https://i.imgur.com/YbSvrTI.png" width="46%"> 
+<img src="https://i.imgur.com/VCeEe88.png" width="46%">
 </p>
 
 ## To-do & Suggestions
