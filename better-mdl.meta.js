@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name Better MDL
 // @description A userscript to enhance the website by making it more friendly & modern
-// @version 1.3.6
+// @version 1.3.7
 // @author Mio.
 // @supportURL https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks
 // @match *://www.mydramalist.com/*
