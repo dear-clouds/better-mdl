@@ -33,7 +33,7 @@ module.exports = {
                 version: packageJson.version,
                 author: "Mio.",
                 // licence: "GPL3",
-                match: ["*://www.mydramalist.com/*", "*mydramalist.com/*"],
+                match: ["*://*.mydramalist.com/*"],
                 description: "A userscript to enhance the website by making it more friendly & modern",
                 downloadURL: "https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js",
                 updateURL: "https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.meta.js",
