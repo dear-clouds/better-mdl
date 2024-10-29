@@ -4,8 +4,7 @@
 // @version 1.3.7
 // @author Mio.
 // @supportURL https://mydramalist.com/discussions/general-discussion/88611-gathering-feedbacks
-// @match *://www.mydramalist.com/*
-// @match *mydramalist.com/*
+// @match *://*.mydramalist.com/*
 // @downloadURL https://github.com/dear-clouds/better-mdl/raw/main/better-mdl.user.js
 // @grant GM_addStyle
 // @grant GM.xmlHttpRequest
